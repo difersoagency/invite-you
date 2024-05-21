@@ -14,7 +14,7 @@ export default function create() {
           <div className='px-10 py-7'>
 
             {/* Step Navigator */}
-            {stepList()}
+            {/* {stepList()} */}
             
             {/* Step Content */}
             <form action="">
@@ -38,7 +38,7 @@ export default function create() {
                   </RadioGroup>
                 </div>
               </div>
-              <a href='/create/template' className='mt-9 px-6 py-2 text-xs bg-gold text-white rounded-md'>Next</a>
+              <a href='/create/wedding/template' className='mt-9 px-6 py-2 text-xs bg-gold text-white rounded-md'>Next</a>
             </form>
 
           </div>
