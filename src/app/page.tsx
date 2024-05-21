@@ -43,7 +43,7 @@ export default function Home(){
 
   return(
     <main>
-     <section className="flex items-center justify-center h-full">
+     <section className="flex items-center justify-center">
       <div className="m-auto">
         <Image 
           src="/logo.png"
