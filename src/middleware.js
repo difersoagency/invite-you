@@ -3,6 +3,8 @@
  * @param {import('next').NextRequest} request - The incoming request object.
  */
 
+import { NextRequest, NextResponse } from 'next/server';
+
 
 
 export function middleware(request) {
@@ -10,8 +12,9 @@ export function middleware(request) {
   
   if (!token) {
     // Token not found, redirect to login page
-    
+    // return 'ok'
   } 
+
 
 
   }

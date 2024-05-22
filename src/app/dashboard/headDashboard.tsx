@@ -1,7 +1,26 @@
 import React from 'react'
 import Image from 'next/image'
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 export default function headDashboard() {
+  const token = Cookies.get('token');
+  const router = useRouter();
+
+  const logoutHanlder = async () => {
+
+
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+ 
+    await axios.post(`${process.env.NEXT_PUBLIC_API_BACKEND}/api/logout`)
+    .then(() => {
+        Cookies.remove("token");
+        router.push('/login');
+    });
+};
+
+
   return (
     <header className='flex justify-between px-10 py-3 bg-cream items-center'>
         <Image
@@ -17,7 +36,7 @@ export default function headDashboard() {
         </div>
 
         <div>
-            <a href='/' className='text-sm font-bold hover:text-gold'>Log Out</a>
+            <button onClick={logoutHanlder} className='text-sm font-bold hover:text-gold'>Log Out</button>
         </div>
     </header>
   )

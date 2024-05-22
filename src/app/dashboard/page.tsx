@@ -1,12 +1,14 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect, useState, } from 'react'
 import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, getKeyValue, ChipProps, Tooltip, User, Chip, } from '@nextui-org/react'
 import headDashboard from './headDashboard'
 import {EyeIcon} from './../component/icon/EyeIcon'
 import {DeleteIcon} from './../component/icon/DeleteIcon'
 import {EditIcon} from './../component/icon/EditIcon'
 import {head, users} from './../data/data'
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 type User = typeof users[0];
 
@@ -16,7 +18,19 @@ const statusColorMap: Record<string, ChipProps["color"]> ={
 }
 
 
-export default function dashboard() {
+export default function Dashboard() {
+  const router = useRouter();
+  const token = Cookies.get('token');
+
+  
+  useEffect(() => {
+
+    if(!token) {
+        router.push('/login');
+    }
+    
+}, []);
+
 
   const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
     const cellValue = user[columnKey as keyof User];
