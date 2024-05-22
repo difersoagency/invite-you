@@ -7,6 +7,7 @@ import { Radio, RadioGroup } from '@nextui-org/react'
 import stepList from './stepList'
 
 export default function create() {
+  
   return (
     <section>
         {headDashboard()}
