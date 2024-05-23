@@ -19,7 +19,7 @@ if (response.status > 300){
 const res = {
     error : false,
     message : 'success',
-    data: response.data.data
+    data: response.data
 }
 
 return res;

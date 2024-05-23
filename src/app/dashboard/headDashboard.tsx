@@ -9,15 +9,8 @@ export default function headDashboard() {
   const router = useRouter();
 
   const logoutHanlder = async () => {
-
-
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
- 
-    await axios.post(`${process.env.NEXT_PUBLIC_API_BACKEND}/api/logout`)
-    .then(() => {
-        Cookies.remove("token");
-        router.push('/login');
-    });
+    Cookies.remove("token");
+    router.push('/');
 };
 
 

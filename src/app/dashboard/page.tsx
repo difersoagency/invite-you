@@ -7,8 +7,8 @@ import {EyeIcon} from './../component/icon/EyeIcon'
 import {DeleteIcon} from './../component/icon/DeleteIcon'
 import {EditIcon} from './../component/icon/EditIcon'
 import {head, users} from './../data/data'
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
+import { NextApiRequest } from 'next'
+
 
 type User = typeof users[0];
 
@@ -19,12 +19,7 @@ const statusColorMap: Record<string, ChipProps["color"]> ={
 
 
 export default function Dashboard() {
-  const router = useRouter();
-  const token = Cookies.get('token');
-
-  
-
-
+ 
   const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
     const cellValue = user[columnKey as keyof User];
   
@@ -103,3 +98,8 @@ export default function Dashboard() {
     </section>
   )
 }
+
+// export async function getServerSideProps({req} : {req:NextApiRequest}){
+//   const {token} = req.cookies;
+//   console.log(token);
+// }
