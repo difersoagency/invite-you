@@ -12,33 +12,36 @@ import Dashboard from "./dashboard/page";
 
 
 
+
+
 export default function Home(){
 
   const router = useRouter();
   const token = Cookies.get('token');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
-  useEffect(() => {
+//   useEffect(() => {
 
-    if(!token) {
-        router.push('/login');
+//     if(!token) {
+//         router.push('/login');
        
-      }else{
-        setIsLoggedIn(true);
-      }
+//       }else{
+//         setIsLoggedIn(true);
+//       }
     
-}, [token]);
+// }, [token]);
 
 
 
 
   return(
     <main>
-      {isLoggedIn ? (
+      {/* {isLoggedIn ? (
         <Dashboard></Dashboard>
       ) : (
          <Login></Login>
-      )}
+      )} */}
+       <Login></Login>
     </main>
   
   );

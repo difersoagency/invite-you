@@ -23,13 +23,6 @@ export default function Dashboard() {
   const token = Cookies.get('token');
 
   
-  useEffect(() => {
-
-    if(!token) {
-        router.push('/login');
-    }
-    
-}, []);
 
 
   const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
