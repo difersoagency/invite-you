@@ -5,9 +5,18 @@ import headDashboard from '../dashboard/headDashboard'
 import FieldCreate from '../component/FieldCreate'
 import { Radio, RadioGroup } from '@nextui-org/react'
 import stepList from './stepList'
+import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
 
 export default function create() {
   
+  const token = Cookies.get('token');
+  const router = useRouter();
+  if(!token) {
+    router.replace('/login');
+    }
+ 
+
   return (
     <section>
         {headDashboard()}

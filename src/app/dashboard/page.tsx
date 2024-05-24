@@ -8,7 +8,8 @@ import {DeleteIcon} from './../component/icon/DeleteIcon'
 import {EditIcon} from './../component/icon/EditIcon'
 import {head, users} from './../data/data'
 import { NextApiRequest } from 'next'
-
+import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
 
 type User = typeof users[0];
 
@@ -19,6 +20,12 @@ const statusColorMap: Record<string, ChipProps["color"]> ={
 
 
 export default function Dashboard() {
+
+  const token = Cookies.get('token');
+  const router = useRouter();
+  if(!token) {
+    router.replace('/login');
+    }
  
   const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
     const cellValue = user[columnKey as keyof User];
