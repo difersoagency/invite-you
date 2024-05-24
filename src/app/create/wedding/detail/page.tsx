@@ -1,7 +1,7 @@
 "use client"
 
 import headDashboard from '@/app/dashboard/headDashboard'
-import React from 'react'
+import React, { useState } from 'react'
 import stepList from '../../stepList'
 import FieldText from '@/app/component/FieldText'
 import FieldDetail from '@/app/component/FieldDetail'
@@ -9,6 +9,32 @@ import { Select, SelectItem } from '@nextui-org/react'
 import { songs } from '@/app/data/data'
 
 export default function page() {
+    const [namaPasangan , setNamapasangan] = useState("")
+    const [musik , setMusik] = useState("")
+    const [gambarUtama , setGambarutama] = useState("")
+    const [gambarCover , setGambarcover] = useState("")
+    const [kataPengantar , setKatapengantar] = useState("")
+    const [pesan , setPesan] = useState("")
+    //Pria
+    const [namaPria , setNamapria] = useState("")
+    const [namaLengkapPria , setNamalengkappria] = useState("")
+    const [ayahPria , setAyahpria] = useState("")
+    const [ibuPria , setIbupria] = useState("")
+    const [fotoPria , setFotopria] = useState("")
+    //Wanita
+    const [namaWanita , setNamawanita] = useState("")
+    const [namaLengkapWanita , setNamalengkapwanita] = useState("")
+    const [ayahWanita , setAyahwanita] = useState("")
+    const [ibuWanita , setIbuwanita] = useState("")
+    const [fotoWanita , setFotowanita] = useState("")
+    //Data Akad
+    const [alamatResepsi , setAlamatresepsi] = useState("")
+    const [tglResepsi , setTglresepsi] = useState("")
+    const [waktuResepsi , setWakturesepsi] = useState("")
+
+    const onSubmit = () => {
+        
+    }
   return (
     <section>
         {headDashboard()}
@@ -16,8 +42,6 @@ export default function page() {
         <div className='px-10 py-7'>
             {/* Step Navigator */}
             {/* {stepList()} */}
-            
-            <form action="">
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-10 py-10'>
                     <FieldDetail usefor='pasangan' label='Nama Pasangan' desc='Tuliskan Nama Pasangan' placeholder='Pria & Wanita' type='text' />
 
@@ -63,18 +87,24 @@ export default function page() {
                         <h2 className='text-dark font-bold mb-5'>Data Pria</h2>
 
                         <div className=' px-6 py-7 border border-gold flex flex-col gap-7 w-full md:w-4/5'>
-                            <FieldDetail usefor='pria' label='Nama Pria' desc='' placeholder='Nama Pria' type='text' />
+                            <FieldDetail usefor='pria' label='Nama Pria' desc='' placeholder='Nama Pria' type='text' value={namaPria} onChange={setNamapria}/>
 
-                            <FieldDetail usefor='pria-lengkap' label='Nama Lengkap Pria' desc='' placeholder='Nama Lengkap Pria' type='text'/>
+                            <FieldDetail usefor='pria-lengkap' label='Nama Lengkap Pria' desc='' placeholder='Nama Lengkap Pria' type='text' value={namaLengkapPria} onChange={setNamalengkappria}/>
 
-                            <FieldDetail usefor='ayah-pria' label='Nama Ayah (Pria)' desc='' placeholder='Nama Ayah Pria' type='text' />
+                            <FieldDetail usefor='ayah-pria' label='Nama Ayah (Pria)' desc='' placeholder='Nama Ayah Pria' type='text' value={ayahPria} onChange={setAyahpria} />
 
-                            <FieldDetail usefor='ibu-pria' label='Nama Ibu (Pria)' desc='' placeholder='Nama Ibu Pria' type='text' />
+                            <FieldDetail usefor='ibu-pria' label='Nama Ibu (Pria)' desc='' placeholder='Nama Ibu Pria' type='text' value={ibuPria} onChange={setIbupria} />
 
                             <div>
                                 <label htmlFor='pesan' className='font-bold text-left text-xs'>Foto Pria</label>
                                 <p className='text-gray text-[0.6rem] mb-2 '>Masukkan Foto Pria</p>
-                                <input type="file" className='p-pict text-xs' />
+                                <input type="file" className='p-pict text-xs' accept="image/png, image/jpg"
+                                onChange={(event) => {
+                                    return setFotopria(event.target.files[0])
+                            
+                                }}
+                                
+                                />
                             </div>
                         </div>
 
@@ -115,10 +145,7 @@ export default function page() {
                     </div>
                 </div>
 
-                
-            </form>
-
-            <button className='text-xs bg-gold text-dark px-6 py-2'>Publish Undangan</button>
+            <button onClick={onSubmit} className='text-xs bg-gold text-dark px-6 py-2'>Publish Undangan</button>
         </div>
 
 

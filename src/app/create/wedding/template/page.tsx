@@ -1,12 +1,27 @@
 "use client"
 
 import headDashboard from '@/app/dashboard/headDashboard'
-import React from 'react'
+import React, { useState } from 'react'
 import stepList from '../../stepList'
 import TemplateDiv from './TemplateDiv'
+import { useRouter } from 'next/navigation'
 
 
 export default function page() {
+  const [template,setTemplate] = useState("");
+  const router = useRouter();
+
+  const onSubmit = () => 
+  {
+    const undanganFormStr = localStorage.getItem('undanganForm');
+    const undanganForm = JSON.parse(undanganFormStr);
+    undanganForm.template = template;
+    localStorage.setItem('undanganForm', JSON.stringify(undanganForm));
+    router.push('/create/wedding/detail')
+    
+  }
+
+
   return (
     <section>
       {headDashboard()}
@@ -16,21 +31,21 @@ export default function page() {
         
         <div className='mt-10 grid grid-cols-1 md:grid-cols-3 h-[60vh] gap-11 overflow-y-scroll mb-7'>
           
-          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-1' nama='Template Wedding 1'/>
+          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-1' nama='Template Wedding 1' onChange={setTemplate} />
 
-          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-2' nama='Template Wedding 2'/>
+          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-2' nama='Template Wedding 2' onChange={setTemplate}/>
 
-          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-3' nama='Template Wedding 3'/>
+          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-3' nama='Template Wedding 3' onChange={setTemplate} />
 
-          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-4' nama='Template Wedding 4'/>
+          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-4' nama='Template Wedding 4'onChange={setTemplate} />
 
-          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-5' nama='Template Wedding 5'/>
+          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-5' nama='Template Wedding 5' onChange={setTemplate}/>
 
-          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-6' nama='Template Wedding 6'/>
+          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-6' nama='Template Wedding 6' onChange={setTemplate}/>
           
         </div>
         
-        <a href='/create/wedding/detail' className='px-6 mx-auto py-2 text-xs bg-gold text-white rounded-md'>Next</a>
+        <button className='px-6 mx-auto py-2 text-xs bg-gold text-white rounded-md' onClick={onSubmit}>Next</button>
       </div>
     </section>
   )
