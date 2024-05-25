@@ -5,7 +5,8 @@ import React, { useState } from 'react'
 import stepList from '../../stepList'
 import TemplateDiv from './TemplateDiv'
 import { useRouter } from 'next/navigation'
-
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
 
 export default function page() {
   const [template,setTemplate] = useState("");
@@ -13,16 +14,20 @@ export default function page() {
 
   const onSubmit = () => 
   {
+    if(template == ''){
+      toast.error('Pilih Salah Satu Template')
+    }else{
     const undanganFormStr = localStorage.getItem('undanganForm');
     const undanganForm = JSON.parse(undanganFormStr);
     undanganForm.template = template;
     localStorage.setItem('undanganForm', JSON.stringify(undanganForm));
     router.push('/create/wedding/detail')
-    
+    }
   }
 
 
   return (
+    <>
     <section>
       {headDashboard()}
 
@@ -48,5 +53,7 @@ export default function page() {
         <button className='px-6 mx-auto py-2 text-xs bg-gold text-white rounded-md' onClick={onSubmit}>Next</button>
       </div>
     </section>
+    <ToastContainer></ToastContainer>
+    </>
   )
 }

@@ -7,6 +7,8 @@ import { Radio, RadioGroup } from '@nextui-org/react'
 import stepList from './stepList'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
 
 export default function create() {
   const token = Cookies.get('token');
@@ -17,17 +19,19 @@ export default function create() {
 
 
   const onSubmit = () => {
-    console.log(namaKlien)
-    console.log(emailKlien)
-    console.log(acara)
-    const undanganForm = {
-      namaKlien,
-      emailKlien,
-      acara
-    }
-    localStorage.setItem('undanganForm',JSON.stringify(undanganForm))
-    // if wedding
+    if(namaKlien == '' || emailKlien == '' || acara == ''){
+      toast.error('Lengkapi Form')
+    }else{
+      const undanganForm = {
+        namaKlien,
+        emailKlien,
+        acara
+      }
+      localStorage.setItem('undanganForm',JSON.stringify(undanganForm))
+      // if wedding
     router.push('/create/wedding/template')
+    }
+   
   }
 
 
@@ -38,6 +42,7 @@ export default function create() {
  
 
   return (
+    <>
     <section>
         {headDashboard()}
 
@@ -73,5 +78,7 @@ export default function create() {
 
           </div>
     </section>
+     <ToastContainer></ToastContainer>
+     </>
   )
 }

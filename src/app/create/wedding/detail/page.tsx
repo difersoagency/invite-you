@@ -9,8 +9,13 @@ import { Select, SelectItem } from '@nextui-org/react'
 import { songs } from '@/app/data/data'
 import { storeUndangan } from '../../../../../services/auth'
 import axios from 'axios'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
+import { useRouter } from 'next/navigation'
+
 
 export default function page() {
+    const router = useRouter();
     const [namaPasangan , setNamapasangan] = useState("")
     const [musik , setMusik] = useState("")
     const [gambarUtama , setGambarutama] = useState("")
@@ -43,7 +48,14 @@ export default function page() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
+        if(namaPasangan == '' || musik == '' || gambarUtama == '' || gambarCover == '' || namaPria == '' ||
+        kataPengantar == '' || namaLengkapPria == '' || ayahPria == '' || ibuPria == '' || fotoPria == '' ||
+        namaWanita == '' || namaLengkapWanita == '' || ayahWanita == '' || ibuWanita == '' || fotoWanita == '' ||
+        alamatResepsi == '' || tglResepsi == '' || waktuResepsi == ''
+        ){
+            toast.error('Lengkapi Form')
+        }
+        else{
         const undanganFormStr = localStorage.getItem('undanganForm');
         const undanganForm = JSON.parse(undanganFormStr);
         const formData = {
@@ -72,11 +84,24 @@ export default function page() {
            waktuResepsi
           }
          
-        const response = await axios.post('http://localhost:8000/api/project/store', formData,config);
-      
+            try {
+                const response = await axios.post('http://localhost:8000/api/project/store', formData, config);
+                
+                if (response.status >= 200 && response.status < 300) {
+                    toast.success("Berhasil");
+                    router.push('/dashboard');
+                } else {
+                    toast.error('Gagal di Publish');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toast.error('Gagal di Publish');
+            }
+    }
        
     }
   return (
+    <>
     <section>
         {headDashboard()}
     <form onSubmit={ onSubmit }>
@@ -204,5 +229,7 @@ export default function page() {
         </form>
 
     </section>
+    <ToastContainer></ToastContainer>
+    </>
   )
 }
