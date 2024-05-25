@@ -33,25 +33,10 @@ export default  function Dashboard() {
     getProjectListAPI()
   },[])
 
-  const ROOT_API = process.env.NEXT_PUBLIC_API;
-  const token = Cookies.get('token');
-  const router = useRouter();
-
-
-  const head = [
-    { name: "Nama Client", uid: "name" },
-    { name: "Acara", uid: "acara" },
-    { name: "Status", uid: "status" },
-    { name: "Menu", uid: "actions" }
-  ];
   // if(!token) {
   //   router.replace('/login');
   //   }
- //http request
-  // const request = await axios.get(`${ROOT_API}/api/project/list`)
-  //   console.log(request)
-
-  
+ 
     
   const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
     const cellValue = user[columnKey as keyof User];
