@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation'
 
 export default function page() {
     const router = useRouter();
+    const ROOT_API = process.env.NEXT_PUBLIC_API;
     const [namaPasangan , setNamapasangan] = useState("")
     const [musik , setMusik] = useState("")
     const [gambarUtama , setGambarutama] = useState("")
@@ -54,8 +55,7 @@ export default function page() {
         alamatResepsi == '' || tglResepsi == '' || waktuResepsi == ''
         ){
             toast.error('Lengkapi Form')
-        }
-        else{
+        }else{
         const undanganFormStr = localStorage.getItem('undanganForm');
         const undanganForm = JSON.parse(undanganFormStr);
         const formData = {
@@ -85,7 +85,7 @@ export default function page() {
           }
          
             try {
-                const response = await axios.post('http://localhost:8000/api/project/store', formData, config);
+                const response = await axios.post(`${ROOT_API}/project/store`, formData, config);
                 
                 if (response.status >= 200 && response.status < 300) {
                     toast.success("Berhasil");

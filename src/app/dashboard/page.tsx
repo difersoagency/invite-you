@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, } from 'react'
+import React, { useCallback, useEffect, useState, } from 'react'
 import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, getKeyValue, ChipProps, Tooltip, User, Chip, } from '@nextui-org/react'
 import headDashboard from './headDashboard'
 import {EyeIcon} from './../component/icon/EyeIcon'
@@ -10,6 +10,8 @@ import {head, users} from './../data/data'
 import { NextApiRequest } from 'next'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
+import axios from 'axios'
+import { getProjectList } from '../../../services/manage'
 
 type User = typeof users[0];
 
@@ -19,14 +21,38 @@ const statusColorMap: Record<string, ChipProps["color"]> ={
 }
 
 
-export default function Dashboard() {
+export default  function Dashboard() {
+  const [projectList, setProjectlist] = useState([]);
+  const getProjectListAPI = useCallback( async () =>{
+   const data = await getProjectList()
 
+   setProjectlist(data)
+  },[getProjectList])
+
+  useEffect(()=>{
+    getProjectListAPI()
+  },[])
+
+  const ROOT_API = process.env.NEXT_PUBLIC_API;
   const token = Cookies.get('token');
   const router = useRouter();
-  if(!token) {
-    router.replace('/login');
-    }
- 
+
+
+  const head = [
+    { name: "Nama Client", uid: "name" },
+    { name: "Acara", uid: "acara" },
+    { name: "Status", uid: "status" },
+    { name: "Menu", uid: "actions" }
+  ];
+  // if(!token) {
+  //   router.replace('/login');
+  //   }
+ //http request
+  // const request = await axios.get(`${ROOT_API}/api/project/list`)
+  //   console.log(request)
+
+  
+    
   const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
     const cellValue = user[columnKey as keyof User];
   
@@ -93,7 +119,7 @@ export default function Dashboard() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={users}>
+      <TableBody items={projectList}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
