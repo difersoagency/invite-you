@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import { getProjectList } from '../../../services/manage'
+import Link from 'next/link'
 
 type User = typeof users[0];
 
@@ -38,7 +39,7 @@ export default  function Dashboard() {
   //   }
  
     
-  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
+  const renderCell = React.useCallback((user: User, columnKey: React.Key,  id: string) => {
     const cellValue = user[columnKey as keyof User];
   
     switch (columnKey) {
@@ -70,12 +71,12 @@ export default  function Dashboard() {
                 <EyeIcon />
               </span>
             </Tooltip>
-            <Tooltip content="Edit User">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EditIcon />
-              </span>
+            <Tooltip content="Edit">
+              <Link href={`/create/${id}`} className="text-lg text-default-400 cursor-pointer active:opacity-50">
+              <EditIcon />
+              </Link>
             </Tooltip>
-            <Tooltip color="danger" content="Delete User">
+            <Tooltip color="danger" content="Delete Project">
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
                 <DeleteIcon />
               </span>
@@ -107,7 +108,7 @@ export default  function Dashboard() {
       <TableBody items={projectList}>
         {(item) => (
           <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            {(columnKey) => <TableCell>{renderCell(item, columnKey,item.id)}</TableCell>}
           </TableRow>
         )}
       </TableBody>
