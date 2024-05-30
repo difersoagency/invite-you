@@ -12,7 +12,7 @@ import 'react-toastify/ReactToastify.css';
 import { getProjectDetail } from '../../../../services/manage'
 
 export default function create({params}:{ params: {id:string}}) {
-  const [projectDetail, setProjectDetail] = useState({});
+  const [projectDetail, setProjectDetail] = useState([]);
   const token = Cookies.get('token');
   const router = useRouter();
   const [namaKlien,setNamaklien] = useState('');  
@@ -21,19 +21,24 @@ export default function create({params}:{ params: {id:string}}) {
   
   
 
-  const getProjectListAPI = useCallback( async (id) =>{
+  const getProjectDetailAPI = useCallback(async (id) =>{
     const data = await getProjectDetail(id)
-      setProjectDetail(data)
+    // setProjectDetail(data)
+    setNamaklien(data.namaKlien)
+    setEmailklien(data.emailKlien)
+    setAcara(data.acara)
    },[])
 
 
     useEffect(()=>{
       if(params.id) {
-        getProjectDetail(params.id)
+        getProjectDetailAPI(params.id)
+        
       }else{
         console.log('error')
       }
     },[params.id])
+
 
 
   const onSubmit = () => {
@@ -47,13 +52,11 @@ export default function create({params}:{ params: {id:string}}) {
       }
       localStorage.setItem('undanganForm',JSON.stringify(undanganForm))
       // if wedding
-    router.push('/create/wedding/template')
+    router.push(`/create/wedding/template/${params.id}`)
     }
    
   }
 
-
-  
   // if(!token) {
   //   router.replace('/login');
   //   }
@@ -74,7 +77,7 @@ export default function create({params}:{ params: {id:string}}) {
               <div className='mt-10 grid grid-cols-2 mb-4'>
                 <div>
                   <div>
-                    <FieldCreate usefor='namaKlien' value="sas" onChange={setNamaklien}  label='Nama Klien' classLabel='font-bold mb-3 text-sm' classInput='w-1/2 px-4 py-2 border border-gold rounded-lg mt-2'/>
+                    <FieldCreate usefor='namaKlien' value={namaKlien} onChange={setNamaklien}  label='Nama Klien' classLabel='font-bold mb-3 text-sm' classInput='w-1/2 px-4 py-2 border border-gold rounded-lg mt-2'/>
                   </div>
 
                   <div className='mt-2 mb-3'>

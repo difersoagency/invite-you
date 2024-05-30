@@ -1,16 +1,37 @@
 "use client"
 
 import headDashboard from '@/app/dashboard/headDashboard'
-import React, { useState } from 'react'
-import stepList from '../../stepList'
-import TemplateDiv from './TemplateDiv'
+import React, { useCallback, useEffect, useState } from 'react'
+import stepList from '../../../stepList'
+import TemplateDiv from '../TemplateDiv'
 import { useRouter } from 'next/navigation'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
+import { getProjectDetail } from '../../../../../../services/manage'
 
-export default function page() {
+export default function page({params}:{ params: {id:string}}) {
   const [template,setTemplate] = useState("");
   const router = useRouter();
+
+
+
+
+  const getProjectDetailAPI = useCallback(async (id) =>{
+    const data = await getProjectDetail(id)
+    // setProjectDetail(data)
+    setTemplate(data.template)
+   },[])
+
+
+    useEffect(()=>{
+      if(params.id) {
+        getProjectDetailAPI(params.id)
+        
+      }else{
+        console.log('error')
+      }
+    },[params.id])
+
 
   const onSubmit = () => 
   {
@@ -21,7 +42,7 @@ export default function page() {
     const undanganForm = JSON.parse(undanganFormStr);
     undanganForm.template = template;
     localStorage.setItem('undanganForm', JSON.stringify(undanganForm));
-    router.push('/create/wedding/detail')
+    router.push(`/create/wedding/detail/${params.id}`)
     }
   }
 
@@ -33,7 +54,6 @@ export default function page() {
 
       <div className='px-10 py-7 text-center'>
         {/* {stepList()} */}
-        
         <div className='mt-10 grid grid-cols-1 md:grid-cols-3 h-[60vh] gap-11 overflow-y-scroll mb-7'>
           
           <TemplateDiv image='https://picsum.photos/300/200' value='wedding-1' nama='Template Wedding 1' select={template}  onChange={setTemplate} />
@@ -42,7 +62,7 @@ export default function page() {
 
           <TemplateDiv image='https://picsum.photos/300/200' value='wedding-3' nama='Template Wedding 3' select={template}    onChange={setTemplate} />
 
-          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-4' nama='Template Wedding 4'select={template}   onChange={setTemplate} />
+          <TemplateDiv image='https://picsum.photos/300/200' value='wedding-4' nama='Template Wedding 4' select={template}   onChange={setTemplate} />
 
           <TemplateDiv image='https://picsum.photos/300/200' value='wedding-5' nama='Template Wedding 5' select={template}   onChange={setTemplate}/>
 
