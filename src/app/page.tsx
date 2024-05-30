@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { setLogin } from "../../services/auth";
 import Cookies from 'js-cookie';
+import Login from "./login/page";
 
 export default function Home(){
   const token = Cookies.get('token');
@@ -15,13 +16,8 @@ export default function Home(){
  
  
 
-    // useEffect(()=>{
-    //   if(token) {
-    //     router.replace('/dashboard');
-    //     }else{
-    //       router.replace('/login');
-    //     }
-    // },[router,token])
-    
+  return (
+   <Login></Login>
+  );   
 }
 

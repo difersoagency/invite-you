@@ -88,6 +88,7 @@ export default function page() {
                 const response = await axios.post(`${ROOT_API}/project/store`, formData, config);
                 
                 if (response.status >= 200 && response.status < 300) {
+                    localStorage.removeItem("undanganForm");
                     toast.success("Berhasil");
                     router.push('/dashboard');
                 } else {

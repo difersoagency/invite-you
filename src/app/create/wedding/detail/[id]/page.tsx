@@ -61,7 +61,7 @@ const getProjectDetailAPI = useCallback(async (id) =>{
     setGambarutama(data.gambarUtama)
     setGambarcover(data.gambarCover)
     setKatapengantar(data.kataPengantar)
-    setPesan(data.setPesan)
+    setPesan(data.pesan)
      //*Pria
      setNamapria(data.namaPria)
      setNamalengkappria(data.namaLengkapPria)
@@ -132,16 +132,16 @@ const getProjectDetailAPI = useCallback(async (id) =>{
           }
          
             try {
-                toast.success("Berhasil");
                 console.log(formData);
-                //const response = await axios.post(`${ROOT_API}/project/store`, formData, config);
+                const response = await axios.post(`${ROOT_API}/project/update/${params.id}`, formData, config);
                 
-                // if (response.status >= 200 && response.status < 300) {
-                //     toast.success("Berhasil");
-                //     router.push('/dashboard');
-                // } else {
-                //     toast.error('Gagal di Publish');
-                // }
+                if (response.status >= 200 && response.status < 300) {
+                    localStorage.removeItem("undanganForm");
+                    toast.success("Berhasil");
+                   router.push('/dashboard');
+                } else {
+                    toast.error('Gagal di Publish');
+                }
             } catch (error) {
                 console.error('Error:', error);
                 toast.error('Gagal di Publish');
@@ -207,7 +207,7 @@ const getProjectDetailAPI = useCallback(async (id) =>{
                     <div>
                         <label htmlFor='pesan' className='font-bold text-left text-xs'>Pesan - Pesan (Optional)</label>
                         <p className='text-gray text-[0.6rem] mb-2 '>Tuliskan pesan - pesan Anda untuk tamu undangan</p>
-                        <textarea name="pesan" id="pesan" value={pesan}   onChange={(event) => setPesan(event.target.value)}  className='border-2 border-gold px-3 py-2 text-xs rounded-lg w-full md:w-2/3' rows={10}></textarea>
+                        <textarea name="pesan" id="pesan" value={pesan} onChange={(event) => setPesan(event.target.value)}  className='border-2 border-gold px-3 py-2 text-xs rounded-lg w-full md:w-2/3' rows={10}></textarea>
                     </div>
 
                     

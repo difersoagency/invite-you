@@ -16,12 +16,15 @@ export default function create() {
   const [namaKlien,setNamaklien] = useState('');  
   const [emailKlien,setEmailklien] = useState('');  
   const [acara,setAcara] = useState('');  
-
+  const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
 
   const onSubmit = () => {
     if(namaKlien == '' || emailKlien == '' || acara == ''){
       toast.error('Lengkapi Form')
     }else{
+
+      if (regEx.test(emailKlien)) {
+         
       const undanganForm = {
         namaKlien,
         emailKlien,
@@ -29,10 +32,13 @@ export default function create() {
       }
       localStorage.setItem('undanganForm',JSON.stringify(undanganForm))
       // if wedding
-    router.push('/create/wedding/template')
+      router.push('/create/wedding/template')
+        } else {
+          toast.error('Email Tidak Valid')
+        }
     }
-   
   }
+ 
 
 
   
@@ -56,11 +62,11 @@ export default function create() {
               <div className='mt-10 grid grid-cols-2 mb-4'>
                 <div>
                   <div>
-                    <FieldCreate usefor='namaKlien' value={namaKlien} onChange={setNamaklien}  label='Nama Klien' classLabel='font-bold mb-3 text-sm' classInput='w-1/2 px-4 py-2 border border-gold rounded-lg mt-2'/>
+                    <FieldCreate type="text" usefor='namaKlien' value={namaKlien} onChange={setNamaklien}  label='Nama Klien' classLabel='font-bold mb-3 text-sm' classInput='w-1/2 px-4 py-2 border border-gold rounded-lg mt-2'/>
                   </div>
 
                   <div className='mt-2 mb-3'>
-                    <FieldCreate usefor='emailKlien' label='Email Klien' value={emailKlien} onChange={setEmailklien} classLabel='font-bold text-black mb-3 text-sm' classInput='w-1/2 px-4 py-2 border border-gold rounded-lg mt-2'/>
+                    <FieldCreate type="email"  usefor='emailKlien' label='Email Klien' value={emailKlien} onChange={setEmailklien} classLabel='font-bold text-black mb-3 text-sm' classInput='w-1/2 px-4 py-2 border border-gold rounded-lg mt-2'/>
                   </div>
                 </div>
 
