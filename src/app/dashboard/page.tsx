@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useCallback, useEffect, useState, } from 'react'
-import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, getKeyValue, ChipProps, Tooltip, User, Chip, } from '@nextui-org/react'
+import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, getKeyValue, ChipProps, Tooltip, User, Chip, Button, } from '@nextui-org/react'
 import headDashboard from './headDashboard'
 import {EyeIcon} from './../component/icon/EyeIcon'
 import {DeleteIcon} from './../component/icon/DeleteIcon'
@@ -13,6 +13,11 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import { getProjectList } from '../../../services/manage'
 import Link from 'next/link'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+
+
 
 type User = typeof users[0];
 
@@ -23,10 +28,11 @@ const statusColorMap: Record<string, ChipProps["color"]> ={
 
 
 export default  function Dashboard() {
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [projectList, setProjectlist] = useState([]);
+  const [idHapus, setIdHapus] = useState('');
   const getProjectListAPI = useCallback( async () =>{
-   const data = await getProjectList()
-
+  const data = await getProjectList()
    setProjectlist(data)
   },[getProjectList])
 
@@ -37,8 +43,38 @@ export default  function Dashboard() {
   // if(!token) {
   //   router.replace('/login');
   //   }
- 
+
+  const openModalWithID = (id) => {
+    setIdHapus(id);
+    onOpen();
+  };
+  
+  const hapusHandler = async () => {
+    const ROOT_API = process.env.NEXT_PUBLIC_API;
+    try {
+      const response = await axios.delete(`${ROOT_API}/project/delete/${idHapus}`);
+      
+      if (response.status >= 200 && response.status < 300) {
+          onClose();
+          toast.success("Berhasil di Hapus",
+            {   
+              onClose: () => {
+                setTimeout(()=>{
+                  window.location.reload();
+                },500)
+            }
+            });
+        //  router.push('/dashboard');
+      } else {
+          toast.error('Gagal di Publish');
+      }
+  } catch (error) {
+      console.error('Error:', error);
+      toast.error('Gagal di Publish');
+  }
+  }
     
+
   const renderCell = React.useCallback((user: User, columnKey: React.Key,  id: string) => {
     const cellValue = user[columnKey as keyof User];
   
@@ -77,9 +113,9 @@ export default  function Dashboard() {
               </Link>
             </Tooltip>
             <Tooltip color="danger" content="Delete Project">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon />
-              </span>
+            <button className="text-lg text-danger cursor-pointer active:opacity-50" type='button' onClick={() => openModalWithID(id)} >
+            <DeleteIcon />
+            </button>
             </Tooltip>
           </div>
         );
@@ -90,6 +126,30 @@ export default  function Dashboard() {
 
 
   return (
+    <>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur'>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Konfirmasi Hapus</ModalHeader>
+              <ModalBody>
+                <p> 
+                  Project akan dihapus ?
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Batal
+                </Button>
+                <Button color="primary" onPress={hapusHandler}>
+                  Hapus
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
     <section>
         {headDashboard()}
 
@@ -115,6 +175,8 @@ export default  function Dashboard() {
     </Table>
       </div>
     </section>
+     <ToastContainer></ToastContainer>
+     </>
   )
 }
 
