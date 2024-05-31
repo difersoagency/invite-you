@@ -132,7 +132,6 @@ const getProjectDetailAPI = useCallback(async (id) =>{
           }
          
             try {
-                console.log(formData);
                 const response = await axios.post(`${ROOT_API}/project/update/${params.id}`, formData, config);
                 
                 if (response.status >= 200 && response.status < 300) {
