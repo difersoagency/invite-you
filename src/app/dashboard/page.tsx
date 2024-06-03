@@ -33,11 +33,17 @@ export default  function Dashboard() {
   const [idHapus, setIdHapus] = useState('');
   const getProjectListAPI = useCallback( async () =>{
   const data = await getProjectList()
-   setProjectlist(data)
+  setProjectlist(data.data)
+
+  if(data.status > 300 ){
+    toast.error(data.message)
+  }
+
   },[getProjectList])
 
   useEffect(()=>{
     getProjectListAPI()
+    
   },[])
 
   // if(!token) {

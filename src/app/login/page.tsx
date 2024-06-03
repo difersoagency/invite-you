@@ -36,11 +36,9 @@ export default function Login(){
         toast.error(response.message)
       }else{
         toast.success("Berhasil")
-        const {token} = response.data.token;
-   
-        Cookies.set('token', token, {expires : 1})
-  
-        router.replace('/dashboard');
+        Cookies.set('token', response.data.token, {expires : 1})
+       
+      router.replace('/dashboard');
       }
     }
   };

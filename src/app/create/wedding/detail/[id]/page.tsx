@@ -54,31 +54,34 @@ export default function page({params}:{ params: {id:string}}) {
 
 const getProjectDetailAPI = useCallback(async (id) =>{
     const data = await getProjectDetail(id)
+    if(data.status > 300 ){
+        toast.error(data.data.message)
+      }
     // setProjectDetail(data)
-    setNamapasangan(data.namaPasangan)
-    setMusik(data.musik)
-    setdefaultMusik([data.musik])
-    setGambarutama(data.gambarUtama)
-    setGambarcover(data.gambarCover)
-    setKatapengantar(data.kataPengantar)
-    setPesan(data.pesan)
+    setNamapasangan(data.data.namaPasangan)
+    setMusik(data.data.musik)
+    setdefaultMusik([data.data.musik])
+    setGambarutama(data.data.gambarUtama)
+    setGambarcover(data.data.gambarCover)
+    setKatapengantar(data.data.kataPengantar)
+    setPesan(data.data.pesan)
      //*Pria
-     setNamapria(data.namaPria)
-     setNamalengkappria(data.namaLengkapPria)
-     setAyahpria(data.ayahPria)
-     setIbupria(data.ibuPria)
-     setFotopria(data.fotoPria)
+     setNamapria(data.data.namaPria)
+     setNamalengkappria(data.data.namaLengkapPria)
+     setAyahpria(data.data.ayahPria)
+     setIbupria(data.data.ibuPria)
+     setFotopria(data.data.fotoPria)
       //*Wanita
-      setNamawanita(data.namaWanita)
-      setNamalengkapwanita(data.namaLengkapWanita)
-      setAyahwanita(data.ayahWanita)
-      setIbuwanita(data.ibuWanita)
-      setFotowanita(data.fotoWanita)
+      setNamawanita(data.data.namaWanita)
+      setNamalengkapwanita(data.data.namaLengkapWanita)
+      setAyahwanita(data.data.ayahWanita)
+      setIbuwanita(data.data.ibuWanita)
+      setFotowanita(data.data.fotoWanita)
     
     //Data Akad
-    setAlamatresepsi(data.alamatResepsi)
-    setTglresepsi(data.tglResepsi)
-    setWakturesepsi(data.waktuResepsi)
+    setAlamatresepsi(data.data.alamatResepsi)
+    setTglresepsi(data.data.tglResepsi)
+    setWakturesepsi(data.data.waktuResepsi)
     
 
 
