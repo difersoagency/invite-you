@@ -19,7 +19,10 @@ export default function page({params}:{ params: {id:string}}) {
   const getProjectDetailAPI = useCallback(async (id) =>{
     const data = await getProjectDetail(id)
     // setProjectDetail(data)
-    setTemplate(data.template)
+    if(data.status > 300 ){
+      toast.error(data.message)
+    }
+    setTemplate(data.data.template)
    },[])
 
 

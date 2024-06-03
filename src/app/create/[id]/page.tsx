@@ -24,10 +24,15 @@ export default function create({params}:{ params: {id:string}}) {
 
   const getProjectDetailAPI = useCallback(async (id) =>{
     const data = await getProjectDetail(id)
+
+    if(data.status > 300 ){
+      toast.error(data.message)
+    }
+    
     // setProjectDetail(data)
-    setNamaklien(data.namaKlien)
-    setEmailklien(data.emailKlien)
-    setAcara(data.acara)
+    setNamaklien(data.data.namaKlien)
+    setEmailklien(data.data.emailKlien)
+    setAcara(data.data.acara)
    },[])
 
 

@@ -11,7 +11,7 @@ import { NextApiRequest } from 'next'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import axios from 'axios'
-import { getProjectList } from '../../../services/manage'
+import { deleteProject, getProjectList } from '../../../services/manage'
 import Link from 'next/link'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
@@ -33,11 +33,17 @@ export default  function Dashboard() {
   const [idHapus, setIdHapus] = useState('');
   const getProjectListAPI = useCallback( async () =>{
   const data = await getProjectList()
-   setProjectlist(data)
+  setProjectlist(data.data)
+
+  if(data.status > 300 ){
+    toast.error(data.message)
+  }
+
   },[getProjectList])
 
   useEffect(()=>{
     getProjectListAPI()
+    
   },[])
 
   // if(!token) {
@@ -52,7 +58,8 @@ export default  function Dashboard() {
   const hapusHandler = async () => {
     const ROOT_API = process.env.NEXT_PUBLIC_API;
     try {
-      const response = await axios.delete(`${ROOT_API}/project/delete/${idHapus}`);
+      
+      const response = await deleteProject(idHapus);
       
       if (response.status >= 200 && response.status < 300) {
           onClose();
@@ -66,7 +73,7 @@ export default  function Dashboard() {
             });
         //  router.push('/dashboard');
       } else {
-          toast.error('Gagal di Publish');
+          toast.error(response.message);
       }
   } catch (error) {
       console.error('Error:', error);

@@ -30,6 +30,7 @@ export default function create() {
         emailKlien,
         acara
       }
+      
       localStorage.setItem('undanganForm',JSON.stringify(undanganForm))
       // if wedding
       router.push('/create/wedding/template')
