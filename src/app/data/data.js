@@ -6,6 +6,20 @@ const head = [
   {name: "Menu", uid: "actions"},
 ];
 
+const songs = [
+  {name: "Judul", uid: "judul"},
+  {name: "Kategori", uid: "kategori"},
+  {name: "Action", uid: "menu"},
+];
+
+const song = [
+  {id:1,judul:"Song 1", kategori: "Wedding"},
+  {id:2,judul:"Song 2", kategori: "Wedding"},
+  {id:3,judul:"Song 3", kategori: "Wedding"},
+  {id:4,judul:"Song 4", kategori: "Birthday"},
+  {id:5,judul:"Song 5", kategori: "Birthday"},
+];
+
 const users = [
   {
     id: 1,
@@ -49,13 +63,7 @@ const users = [
   },
 ];
 
-const songs = [
-  {label: "Song 1", value: "song 1"},
-  {label: "Song 2", value: "song 2"},
-  {label: "Song 3", value: "song 3"},
-  {label: "Song 4", value: "song 4"},
-  {label: "Song 5", value: "song 5"},
-];
 
 
-export {head, users, songs};
+
+export {head, users, songs, song};

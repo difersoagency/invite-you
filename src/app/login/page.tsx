@@ -47,8 +47,9 @@ export default function Login(){
 
   return(
     <>
-     <section className="flex items-center justify-center">
-      <div className="m-auto">
+    <section className="w-screen h-screen bg-[url('/bg.png')] bg-cover opacity-25 absolute z-[-1]"></section>
+    <section className="flex items-center h-screen w-screen justify-center relative z-20">
+      <div className="m-auto bg-white px-14 py-10 rounded-xl">
         <Image 
           src="/logo.png"
           width={200}
@@ -57,10 +58,10 @@ export default function Login(){
           className="m-auto"
         />
         <h1 className="font-bold text-2xl mt-2 text-center">Login</h1>
-        <div  className="mt-5 text-center">
+        <div  className="mt-5 ">
           <FieldText usefor='email' label='Email'  value={email} onChange={setEmail}  type="text"/>
           <FieldText usefor='password' label='Password' value={password} onChange={setPassword} type="password"/>
-          <button className="px-8 py-2 text-white font-bold mx-auto bg-gold mt-6 text-xs " onClick={loginHandler} type="submit">Login</button>
+          <button className="px-8 py-2 text-white font-bold mx-auto bg-gold mt-6 text-xs w-[20vw]" onClick={loginHandler} type="submit">Login</button>
         </div>
       </div>
     </section>
