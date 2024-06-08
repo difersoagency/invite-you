@@ -1,7 +1,7 @@
 "use client"
 
 import headDashboard from '@/app/dashboard/headDashboard'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import stepList from '../../stepList'
 import FieldText from '@/app/component/FieldText'
 import FieldDetail from '@/app/component/FieldDetail'
@@ -12,15 +12,19 @@ import axios from 'axios'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { useRouter } from 'next/navigation'
+import { getMusicList } from '../../../../../services/manage'
 
 
 export default function page() {
     const router = useRouter();
     const ROOT_API = process.env.NEXT_PUBLIC_API;
+    const [musicList, setMusiclist] = useState([]);
     const [namaPasangan , setNamapasangan] = useState("")
     const [musik , setMusik] = useState("")
     const [gambarUtama , setGambarutama] = useState("")
+    const [gambarUtamaView, setGambarutamaView] = useState(null)
     const [gambarCover , setGambarcover] = useState("")
+    const [gambarCoverView , setGambarcoverView] = useState(null)
     const [kataPengantar , setKatapengantar] = useState("")
     const [pesan , setPesan] = useState("")
     //Pria
@@ -29,61 +33,86 @@ export default function page() {
     const [ayahPria , setAyahpria] = useState("")
     const [ibuPria , setIbupria] = useState("")
     const [fotoPria , setFotopria] = useState("")
+    const [fotoPriaView , setFotopriaView] = useState(null)
     //Wanita
     const [namaWanita , setNamawanita] = useState("")
     const [namaLengkapWanita , setNamalengkapwanita] = useState("")
     const [ayahWanita , setAyahwanita] = useState("")
     const [ibuWanita , setIbuwanita] = useState("")
     const [fotoWanita , setFotowanita] = useState("")
+    const [fotoWanitaView , setFotowanitaView] = useState(null)
     //Data Akad
     const [alamatResepsi , setAlamatresepsi] = useState("")
     const [tglResepsi , setTglresepsi] = useState("")
     const [waktuResepsi , setWakturesepsi] = useState("")
-
+    //Tanbahan
+    const [gallery,setGallery] = useState([]);
+    const [galleryView,setGalleryView] = useState([]);
     const config = {
         headers: {
           'content-type': 'multipart/form-data',
         }
       };
 
+      const getMusicListAPI = useCallback( async () =>{
+        const data = await getMusicList()
+        setMusiclist(data.data)
+      
+        if(data.status > 300 ){
+          toast.error(data.message)
+        }
+      
+        },[getMusicList])
+      
+       
+      
+        useEffect(()=>{
+          getMusicListAPI()
+          
+        },[])
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        if(namaPasangan == '' || musik == '' || gambarUtama == '' || gambarCover == '' || namaPria == '' ||
+        if(
+          
+            namaPasangan == '' || musik == '' || gambarUtama == '' || gambarCover == '' || namaPria == '' ||
         kataPengantar == '' || namaLengkapPria == '' || ayahPria == '' || ibuPria == '' || fotoPria == '' ||
         namaWanita == '' || namaLengkapWanita == '' || ayahWanita == '' || ibuWanita == '' || fotoWanita == '' ||
-        alamatResepsi == '' || tglResepsi == '' || waktuResepsi == ''
+        alamatResepsi == '' || tglResepsi == '' || waktuResepsi == ''|| gallery.length === 0
         ){
             toast.error('Lengkapi Form')
         }else{
         const undanganFormStr = localStorage.getItem('undanganForm');
         const undanganForm = JSON.parse(undanganFormStr);
-        const formData = {
-            namaKlien : undanganForm.namaKlien,
-            emailKlien : undanganForm.emailKlien,
-            acara : undanganForm.acara,
-            template : undanganForm.template,
-            namaPasangan,
-            musik,
-            gambarUtama,
-            gambarCover,
-            namaPria,
-            kataPengantar,
-            pesan,
-            namaLengkapPria,
-            ayahPria,
-            ibuPria,
-            fotoPria,
-            namaWanita,
-            namaLengkapWanita,
-            ayahWanita,
-            ibuWanita,
-           fotoWanita,
-           alamatResepsi,
-           tglResepsi,
-           waktuResepsi
-          }
-         
+       
+    const formData = new FormData();
+    formData.append('namaKlien', undanganForm.namaKlien);
+    formData.append('emailKlien', undanganForm.emailKlien);
+    formData.append('acara', undanganForm.acara);
+    formData.append('template', undanganForm.template);
+    formData.append('namaPasangan', namaPasangan);
+    formData.append('musik', musik);
+    formData.append('gambarUtama', gambarUtama);
+    formData.append('gambarCover', gambarCover);
+    formData.append('namaPria', namaPria);
+    formData.append('kataPengantar', kataPengantar);
+    formData.append('pesan', pesan);
+    formData.append('namaLengkapPria', namaLengkapPria);
+    formData.append('ayahPria', ayahPria);
+    formData.append('ibuPria', ibuPria);
+    formData.append('fotoPria', fotoPria);
+    formData.append('namaWanita', namaWanita);
+    formData.append('namaLengkapWanita', namaLengkapWanita);
+    formData.append('ayahWanita', ayahWanita);
+    formData.append('ibuWanita', ibuWanita);
+    formData.append('fotoWanita', fotoWanita);
+    formData.append('alamatResepsi', alamatResepsi);
+    formData.append('tglResepsi', tglResepsi);
+    formData.append('waktuResepsi', waktuResepsi);
+
+    for (let i = 0; i < gallery.length; i++) {
+      formData.append('gallery[]', gallery[i]);
+    }
             try {
                 const response = await axios.post(`${ROOT_API}/project/store`, formData, config);
                 
@@ -116,9 +145,9 @@ export default function page() {
                         <label htmlFor='pengantar' className='font-bold text-left text-xs'>Musik</label>
                         <p className='text-gray text-[0.6rem] mb-2 '>Pilih Musik yang ingin Anda gunakan</p>
                         <Select label='Musik Pilihan' value={musik} onChange={(event) => setMusik(event.target.value)} >
-                            {songs.map((song) => (
-                                <SelectItem key={song.value} value={song.value}>
-                                    {song.label}
+                            {musicList.map((music) => (
+                                <SelectItem key={music.id} value={music.id}>
+                                    {music.judul}
                                 </SelectItem>
                             ))}
                         </Select>
@@ -129,16 +158,18 @@ export default function page() {
                         <p className='text-gray text-[0.6rem] mb-2 '>Upload dan Masukkan Gambar Utama undangan Anda</p>
                         <input type="file" className='utama-pict text-xs'  
                         onChange={(event) => {
+                            setGambarutamaView(URL.createObjectURL(event.target.files[0]))
                                     return setGambarutama(event.target.files[0])    
                                 }} />
-                        
+                        {gambarUtamaView ? 
                         <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>
                             <label htmlFor='pesan' className='font-bold text-left text-xs'>Image Preview</label>
 
                             <div className='w-fit mt-4'>
-                                <img src="https://picsum.photos/200" alt="" />
+                                <img src={gambarUtamaView} alt=""  width={200} height={200}/>
                             </div>
-                        </div>
+                        </div> : ''
+                        }
                     </div>
 
                     <div>
@@ -146,45 +177,44 @@ export default function page() {
                         <p className='text-gray text-[0.6rem] mb-2 '>Upload dan Masukkan Gambar Cover undangan Anda</p>
                         <input type="file" className='cover-pict text-xs' 
                         onChange={(event) => {
+                            setGambarcoverView(URL.createObjectURL(event.target.files[0]))
                             return setGambarcover(event.target.files[0])    
                         }} 
                         />
+                        {gambarCoverView ? 
                         <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>
                             <label htmlFor='pesan' className='font-bold text-left text-xs'>Image Preview</label>
 
                             <div className='w-fit mt-4'>
-                                <img src="https://picsum.photos/200" alt="" />
+                                <img src={gambarCoverView} alt=""  width={200} height={200}/>
                             </div>
                         </div>
+                        : ''}
                     </div>
 
                     <div className='col-span-2 border border-gold px-8 py-5'>
                         <label htmlFor='pesan' className='font-bold text-left text-xs'>Upload Foto Gallery</label>
                         <br /><br />
-                        <input type="file" name="" id="" className='text-xs'/>
-
+                        <input type="file" name="" id="" className='text-xs' multiple onChange={(event) => {
+                             const files = Array.from(event.target.files);
+                                 setGalleryView(files)
+                                return setGallery(files)
+                        }} />
+                        {galleryView.length > 0 ? 
                         <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>
 
                             <label htmlFor='pesan' className='font-bold text-left text-xs'>Image Preview</label>
 
                             <div className='grid grid-cols-6 gap-6'>
-                                <img src="https://picsum.photos/200" alt="" />
-                                <img src="https://picsum.photos/200" alt="" />
-
-                                <img src="https://picsum.photos/200" alt="" />
-
-                                <img src="https://picsum.photos/200" alt="" />
-                                <img src="https://picsum.photos/200" alt="" />
-
-                                <img src="https://picsum.photos/200" alt="" />
-
-                                <img src="https://picsum.photos/200" alt="" />
-                                <img src="https://picsum.photos/200" alt="" />
-                                <img src="https://picsum.photos/200" alt="" />
-                                <img src="https://picsum.photos/200" alt="" />
+                            {galleryView.map((file, index) => (
+                  <img key={index} src={URL.createObjectURL(file)} alt={`Preview ${index}`} width={200} height={200}/>
+            ))}
+                              
+                              
                             </div>
 
                         </div>
+                    : ''}
                     </div>
 
                     <div>
@@ -218,11 +248,22 @@ export default function page() {
                                 <p className='text-gray text-[0.6rem] mb-2 '>Masukkan Foto Pria</p>
                                 <input type="file" className='p-pict text-xs' 
                                 onChange={(event) => {
+                                    setFotopriaView(URL.createObjectURL(event.target.files[0]))
                                     return setFotopria(event.target.files[0])
                             
                                 }}
                                 
                                 />
+
+{fotoPriaView ? 
+                                <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>
+                             <label htmlFor='pesan' className='font-bold text-left text-xs'>Image Preview</label>
+
+                                <div className='w-fit mt-4'>
+                                <img src={fotoPriaView} alt="" width={200} height={200} />
+                            </div>
+                        </div>
+                       : '' }
                             </div>
                         </div>
 
@@ -246,10 +287,20 @@ export default function page() {
                                 <p className='text-gray text-[0.6rem] mb-2 '>Masukkan Foto Wanita</p>
                                 <input type="file" className='w-pict text-xs' 
                                   onChange={(event) => {
+                                    setFotowanitaView(URL.createObjectURL(event.target.files[0]))
                                     return setFotowanita(event.target.files[0])
                             
                                 }}
                                 />
+                            {fotoWanitaView ? 
+                                <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>
+                             <label htmlFor='pesan' className='font-bold text-left text-xs'>Image Preview</label>
+
+                                <div className='w-fit mt-4'>
+                                <img src={fotoWanitaView} alt=""  width={200} height={200}/>
+                            </div>
+                        </div>
+                       : '' }
                             </div>
                         </div>
                     </div>

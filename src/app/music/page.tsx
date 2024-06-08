@@ -26,7 +26,7 @@ export default  function Dashboard() {
   const [uploading, setUploading] = useState(false);
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [isPlayModalOpen, setPlayModalOpen] = useState(false);
-  const [musictList, setMusiclist] = useState([]);
+  const [musicList, setMusiclist] = useState([]);
   const [idHapus, setIdHapus] = useState('');
   const [streamFile, setStreamFile] = useState('');
   const [audioSrc, setAudioSrc] = useState('');
@@ -255,7 +255,7 @@ export default  function Dashboard() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={musictList}>
+      <TableBody items={musicList}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey,item.id)}</TableCell>}
