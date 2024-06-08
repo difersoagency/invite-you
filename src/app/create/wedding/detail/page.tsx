@@ -131,6 +131,14 @@ export default function page() {
                         onChange={(event) => {
                                     return setGambarutama(event.target.files[0])    
                                 }} />
+                        
+                        <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>
+                            <label htmlFor='pesan' className='font-bold text-left text-xs'>Image Preview</label>
+
+                            <div className='w-fit mt-4'>
+                                <img src="https://picsum.photos/200" alt="" />
+                            </div>
+                        </div>
                     </div>
 
                     <div>
@@ -141,6 +149,13 @@ export default function page() {
                             return setGambarcover(event.target.files[0])    
                         }} 
                         />
+                        <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>
+                            <label htmlFor='pesan' className='font-bold text-left text-xs'>Image Preview</label>
+
+                            <div className='w-fit mt-4'>
+                                <img src="https://picsum.photos/200" alt="" />
+                            </div>
+                        </div>
                     </div>
 
                     <div className='col-span-2 border border-gold px-8 py-5'>
@@ -148,21 +163,26 @@ export default function page() {
                         <br /><br />
                         <input type="file" name="" id="" className='text-xs'/>
 
-                        <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg grid grid-cols-6 gap-6'>
-                            <img src="https://picsum.photos/200" alt="" />
-                            <img src="https://picsum.photos/200" alt="" />
+                        <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>
 
-                            <img src="https://picsum.photos/200" alt="" />
+                            <label htmlFor='pesan' className='font-bold text-left text-xs'>Image Preview</label>
 
-                            <img src="https://picsum.photos/200" alt="" />
-                            <img src="https://picsum.photos/200" alt="" />
+                            <div className='grid grid-cols-6 gap-6'>
+                                <img src="https://picsum.photos/200" alt="" />
+                                <img src="https://picsum.photos/200" alt="" />
 
-                            <img src="https://picsum.photos/200" alt="" />
+                                <img src="https://picsum.photos/200" alt="" />
 
-                            <img src="https://picsum.photos/200" alt="" />
-                            <img src="https://picsum.photos/200" alt="" />
-                            <img src="https://picsum.photos/200" alt="" />
-                            <img src="https://picsum.photos/200" alt="" />
+                                <img src="https://picsum.photos/200" alt="" />
+                                <img src="https://picsum.photos/200" alt="" />
+
+                                <img src="https://picsum.photos/200" alt="" />
+
+                                <img src="https://picsum.photos/200" alt="" />
+                                <img src="https://picsum.photos/200" alt="" />
+                                <img src="https://picsum.photos/200" alt="" />
+                                <img src="https://picsum.photos/200" alt="" />
+                            </div>
 
                         </div>
                     </div>
