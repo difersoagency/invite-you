@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useEffect, useState, } from 'react'
+import React, { useCallback, useEffect, useRef, useState, } from 'react'
 import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, getKeyValue, ChipProps, Tooltip, User, Chip, Button, } from '@nextui-org/react'
 import headDashboard from '../dashboard/headDashboard'
 import {EyeIcon} from './../component/icon/EyeIcon'
@@ -11,7 +11,7 @@ import { NextApiRequest } from 'next'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import axios from 'axios'
-import { deleteProject, getProjectList } from '../../../services/manage'
+import { deleteMusic, deleteProject, getMusicList, getProjectList, storeMusic } from '../../../services/manage'
 import Link from 'next/link'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
@@ -23,13 +23,16 @@ type User = typeof users[0];
 
 
 export default  function Dashboard() {
+  const [uploading, setUploading] = useState(false);
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
-  const [projectList, setProjectlist] = useState([]);
+  const [musictList, setMusiclist] = useState([]);
   const [idHapus, setIdHapus] = useState('');
   const [audioSrc, setAudioSrc] = useState('');
-  const getProjectListAPI = useCallback( async () =>{
-  const data = await getProjectList()
-  setProjectlist(data.data)
+  const [audioFile, setAudioFile] = useState('');
+  const audioRef = useRef(null);
+  const getMusicListAPI = useCallback( async () =>{
+  const data = await getMusicList()
+  setMusiclist(data.data)
 
   if(data.status > 300 ){
     toast.error(data.message)
@@ -38,7 +41,7 @@ export default  function Dashboard() {
   },[getProjectList])
 
   useEffect(()=>{
-    getProjectListAPI()
+    getMusicListAPI()
     
   },[])
 
@@ -46,9 +49,17 @@ export default  function Dashboard() {
   //   router.replace('/login');
   //   }
 
+  
+
+
   const handleFiles = (event) => {
     const files = event.target.files;
+    setAudioFile(files);
     setAudioSrc(URL.createObjectURL(files[0]));
+    if(audioRef.current){
+      audioRef.current.load();
+      audioRef.current.play();
+    }
   };
 
   const openModalWithID = (id) => {
@@ -56,11 +67,38 @@ export default  function Dashboard() {
     onOpen();
   };
   
+  const onSubmit =  async () => {
+    setUploading(true);
+    if(audioFile == ''){
+      toast.error('Pilih file lagu terlebih dahulu');
+      setUploading(false);
+      return
+    }
+    try {
+      const response = await storeMusic(audioFile);
+      if (response.status >= 200 && response.status < 300) {
+        toast.success("Berhasil di Upload",
+          {   
+            onClose: () => {
+              setTimeout(()=>{
+                window.location.reload();
+              },500)
+          }
+          });
+    } else {
+        toast.error(response.message);
+    }
+    } catch (error) {
+      toast.error('Gagal Di Upload');
+    }
+  }
+
+
   const hapusHandler = async () => {
-    const ROOT_API = process.env.NEXT_PUBLIC_API;
+    console.log(idHapus);
     try {
       
-      const response = await deleteProject(idHapus);
+      const response = await deleteMusic(idHapus);
       
       if (response.status >= 200 && response.status < 300) {
           onClose();
@@ -72,7 +110,6 @@ export default  function Dashboard() {
                 },500)
             }
             });
-        //  router.push('/dashboard');
       } else {
           toast.error(response.message);
       }
@@ -111,7 +148,7 @@ export default  function Dashboard() {
             </Tooltip>
            
             <Tooltip color="danger" content="Delete Song">
-            <button className="text-lg text-danger cursor-pointer active:opacity-50" type='button' onClick={() => openModalWithID(id)} >
+            <button className="text-lg text-danger cursor-pointer active:opacity-50" type='button'   onClick={() => openModalWithID(id)} >
             <DeleteIcon />
             </button>
             </Tooltip>
@@ -132,7 +169,7 @@ export default  function Dashboard() {
               <ModalHeader className="flex flex-col gap-1">Konfirmasi Hapus</ModalHeader>
               <ModalBody>
                 <p> 
-                  Project akan dihapus ?
+                  Musik akan dihapus ?
                 </p>
               </ModalBody>
               <ModalFooter>
@@ -157,24 +194,24 @@ export default  function Dashboard() {
                 <div>
                     <h1 className='font-bold mb-5'>List Musik</h1>
                 </div>
-                <div className='text-right'>
+                {/* <div className='text-right'>
                     <button className='text-sm font-bold hover:text-gold rounded-lg text-white  hover:bg-white hover:border hover:border-gold transition-all bg-gold px-4 py-2'>Tambah Lagu</button>
-                </div>
+                </div> */}
             </div>
 
             <div className='px-10 py-5 border border-gold mb-8 rounded-xl'>
                 <h2 className='font-bold mb-8'>Upload Lagu Baru</h2>
-
-                <form action="">
-                    <input type="file" id="upload" className='mb-8' onChange={handleFiles} />
-                    <audio id="audio" controls className='mb-8'>
+                    <input type="file"  accept=".mp3" id="upload" className='mb-8' onChange={handleFiles} />
+                    {/* <audio id="audio" controls className='mb-8'>
                         <source src={audioSrc} id="src" type='audio'/>
                         Your browser does not support the audio element.
-                    </audio>
-
-                    <button className='text-sm font-bold hover:text-gold rounded-lg text-white  hover:bg-white hover:border hover:border-gold transition-all bg-gold px-4 py-2'>Upload Lagu</button>
-                </form>
-                
+                    </audio> */}
+                    <audio id="audio" controls className='mb-8' ref={audioRef}>
+                {audioSrc && <source src={audioSrc} id="src" type="audio/mpeg" />}
+                Your browser does not support the audio element.
+                 </audio>
+                    <button className='text-sm font-bold hover:text-gold rounded-lg text-white  hover:bg-white hover:border hover:border-gold transition-all bg-gold px-4 py-2'  disabled={uploading} onClick={onSubmit}>
+                    {uploading ? 'Uploading...' : 'Upload Lagu'}</button>
             </div>
 
           <Table aria-label="Example table with custom cells">
@@ -185,7 +222,7 @@ export default  function Dashboard() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={song}>
+      <TableBody items={musictList}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey,item.id)}</TableCell>}
