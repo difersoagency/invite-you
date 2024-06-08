@@ -11,7 +11,7 @@ import { NextApiRequest } from 'next'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import axios from 'axios'
-import { deleteMusic, deleteProject, getMusicList, getProjectList, storeMusic } from '../../../services/manage'
+import { deleteMusic, deleteProject, getDetailMusic, getMusicList, getProjectList, storeMusic } from '../../../services/manage'
 import Link from 'next/link'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
@@ -25,8 +25,10 @@ type User = typeof users[0];
 export default  function Dashboard() {
   const [uploading, setUploading] = useState(false);
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
+  const [isPlayModalOpen, setPlayModalOpen] = useState(false);
   const [musictList, setMusiclist] = useState([]);
   const [idHapus, setIdHapus] = useState('');
+  const [streamFile, setStreamFile] = useState('');
   const [audioSrc, setAudioSrc] = useState('');
   const [audioFile, setAudioFile] = useState('');
   const audioRef = useRef(null);
@@ -38,7 +40,9 @@ export default  function Dashboard() {
     toast.error(data.message)
   }
 
-  },[getProjectList])
+  },[getMusicList])
+
+ 
 
   useEffect(()=>{
     getMusicListAPI()
@@ -49,7 +53,12 @@ export default  function Dashboard() {
   //   router.replace('/login');
   //   }
 
-  
+  const ROOT_API = process.env.NEXT_PUBLIC_API;
+  const openPlayModalWithID = (id) => {
+   setPlayModalOpen(true);
+   setStreamFile(`${ROOT_API}/music/detail/${id}`);
+    console.log(id)
+  };
 
 
   const handleFiles = (event) => {
@@ -65,6 +74,10 @@ export default  function Dashboard() {
   const openModalWithID = (id) => {
     setIdHapus(id);
     onOpen();
+  };
+
+  const closeModal = () => {
+    setPlayModalOpen(false);
   };
   
   const onSubmit =  async () => {
@@ -142,15 +155,15 @@ export default  function Dashboard() {
         return (
           <div className="relative flex items-center gap-2">
             <Tooltip content="Play">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+              <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={()=> openPlayModalWithID(id)}>
                 <EyeIcon />
               </span>
             </Tooltip>
            
             <Tooltip color="danger" content="Delete Song">
-            <button className="text-lg text-danger cursor-pointer active:opacity-50" type='button'   onClick={() => openModalWithID(id)} >
+            <span className="text-lg text-danger cursor-pointer active:opacity-50"   onClick={() => openModalWithID(id)} >
             <DeleteIcon />
-            </button>
+            </span>
             </Tooltip>
           </div>
         );
@@ -178,6 +191,26 @@ export default  function Dashboard() {
                 </Button>
                 <Button color="primary" onPress={hapusHandler}>
                   Hapus
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isPlayModalOpen} onOpenChange={setPlayModalOpen} backdrop='blur'>
+        <ModalContent>
+          {(closeModal) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Preview Music</ModalHeader>
+              <ModalBody>
+                    <audio id="audio" controls className='mb-8'>
+                        <source src={streamFile} id="src"  type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                    </audio>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={closeModal}>
+                  Kembali
                 </Button>
               </ModalFooter>
             </>
