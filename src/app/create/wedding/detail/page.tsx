@@ -18,6 +18,7 @@ import { getMusicList } from '../../../../../services/manage'
 export default function page() {
     const router = useRouter();
     const ROOT_API = process.env.NEXT_PUBLIC_API;
+    const [uploading, setUploading] = useState(false);
     const [musicList, setMusiclist] = useState([]);
     const [namaPasangan , setNamapasangan] = useState("")
     const [musik , setMusik] = useState("")
@@ -45,7 +46,7 @@ export default function page() {
     const [alamatResepsi , setAlamatresepsi] = useState("")
     const [tglResepsi , setTglresepsi] = useState("")
     const [waktuResepsi , setWakturesepsi] = useState("")
-    //Tanbahan
+    //Tambahan
     const [gallery,setGallery] = useState([]);
     const [galleryView,setGalleryView] = useState([]);
     const config = {
@@ -71,8 +72,8 @@ export default function page() {
           
         },[])
 
-    const onSubmit = async (e) => {
-        e.preventDefault();
+    const onSubmit = async () => {
+        setUploading(true);
         if(
           
             namaPasangan == '' || musik == '' || gambarUtama == '' || gambarCover == '' || namaPria == '' ||
@@ -81,6 +82,7 @@ export default function page() {
         alamatResepsi == '' || tglResepsi == '' || waktuResepsi == ''|| gallery.length === 0
         ){
             toast.error('Lengkapi Form')
+            setUploading(false);
         }else{
         const undanganFormStr = localStorage.getItem('undanganForm');
         const undanganForm = JSON.parse(undanganFormStr);
@@ -118,14 +120,22 @@ export default function page() {
                 
                 if (response.status >= 200 && response.status < 300) {
                     localStorage.removeItem("undanganForm");
-                    toast.success("Berhasil");
-                    router.push('/dashboard');
+                    toast.success("Berhasil di Upload",
+                    {   
+                        onClose: () => {
+                        setTimeout(()=>{
+                            router.push('/dashboard');
+                        },500)
+                    }
+                    });
                 } else {
                     toast.error('Gagal di Publish');
+                    setUploading(false);
                 }
             } catch (error) {
                 console.error('Error:', error);
                 toast.error('Gagal di Publish');
+                setUploading(false);
             }
     }
        
@@ -134,7 +144,6 @@ export default function page() {
     <>
     <section>
         {headDashboard()}
-    <form onSubmit={ onSubmit }>
         <div className='px-10 py-7'>
             {/* Step Navigator */}
             {/* {stepList()} */}
@@ -319,11 +328,8 @@ export default function page() {
                     </div>
                 </div>
 
-            <button type='submit' className='text-xs bg-gold text-dark px-6 py-2'>Publish Undangan</button>
-            
+            <button className='text-xs bg-gold text-dark px-6 py-2' disabled={uploading} onClick={ onSubmit }>{uploading ? 'Tunggu Sebentar..' : 'Publish Undangan'}</button>
         </div>
-        </form>
-
     </section>
     <ToastContainer></ToastContainer>
     </>
