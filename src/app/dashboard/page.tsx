@@ -50,6 +50,11 @@ export default  function Dashboard() {
   //   router.replace('/login');
   //   }
 
+  const openNewTab = (link) => {
+    const url =  `${process.env.NEXT_PUBLIC_WEB}${link}`;
+    window.open(url, '_blank');
+  };
+
   const openModalWithID = (id) => {
     setIdHapus(id);
     onOpen();
@@ -110,7 +115,7 @@ export default  function Dashboard() {
         return (
           <div className="relative flex items-center gap-2">
             <Tooltip content="Details">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+              <span onClick={() => openNewTab(user.link)}className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EyeIcon />
               </span>
             </Tooltip>
