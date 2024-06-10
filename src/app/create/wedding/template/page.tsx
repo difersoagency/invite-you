@@ -1,6 +1,6 @@
 "use client"
 
-import headDashboard from '@/app/dashboard/headDashboard'
+import HeadDashboard from '@/app/dashboard/HeadDashboard'
 import React, { useState } from 'react'
 import stepList from '../../stepList'
 import TemplateDiv from './TemplateDiv'
@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 
-export default function page() {
+export default function Page() {
   const [template,setTemplate] = useState("");
   const router = useRouter();
 
@@ -29,7 +29,7 @@ export default function page() {
   return (
     <>
     <section>
-      {headDashboard()}
+      <HeadDashboard/>
 
       <div className='px-10 py-7 text-center'>
         {/* {stepList()} */}

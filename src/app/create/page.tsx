@@ -1,16 +1,15 @@
 "use client"
 
 import React, { useState } from 'react'
-import headDashboard from '../dashboard/headDashboard'
+import HeadDashboard from '../dashboard/HeadDashboard'
 import FieldCreate from '../component/FieldCreate'
 import { Radio, RadioGroup } from '@nextui-org/react'
-import stepList from './stepList'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 
-export default function create() {
+export default function Create() {
   const token = Cookies.get('token');
   const router = useRouter();
   const [namaKlien,setNamaklien] = useState('');  
@@ -51,7 +50,7 @@ export default function create() {
   return (
     <>
     <section>
-        {headDashboard()}
+        <HeadDashboard/>
 
           <div className='px-10 py-7'>
 

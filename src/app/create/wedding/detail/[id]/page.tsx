@@ -1,6 +1,6 @@
 "use client"
 
-import headDashboard from '@/app/dashboard/headDashboard'
+import HeadDashboard from '@/app/dashboard/HeadDashboard'
 import React, { useCallback, useEffect, useState } from 'react'
 import stepList from '../../../stepList'
 import FieldText from '@/app/component/FieldText'
@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'
 import { getMusicList, getProjectDetail } from '../../../../../../services/manage'
 
 
-export default function page({params}:{ params: {id:string}}) {
+export default function Page({params}:{ params: {id:string}}) {
 
     const [defaultMusik, setdefaultMusik] = useState([]);
   
@@ -189,7 +189,7 @@ const getProjectDetailAPI = useCallback(async (id) =>{
   return (
     <>
     <section>
-        {headDashboard()}
+        <HeadDashboard/>
 
         <div className='px-10 py-7'>
             {/* Step Navigator */}

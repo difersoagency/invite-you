@@ -1,6 +1,6 @@
 "use client"
 
-import headDashboard from '@/app/dashboard/headDashboard'
+import HeadDashboard from '@/app/dashboard/HeadDashboard'
 import React, { useCallback, useEffect, useState } from 'react'
 import stepList from '../../stepList'
 import FieldText from '@/app/component/FieldText'
@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'
 import { getMusicList } from '../../../../../services/manage'
 
 
-export default function page() {
+export default function Page() {
     const router = useRouter();
     const ROOT_API = process.env.NEXT_PUBLIC_API;
     const [uploading, setUploading] = useState(false);
@@ -143,7 +143,7 @@ export default function page() {
   return (
     <>
     <section>
-        {headDashboard()}
+        <HeadDashboard/>
         <div className='px-10 py-7'>
             {/* Step Navigator */}
             {/* {stepList()} */}

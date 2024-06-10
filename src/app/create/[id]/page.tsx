@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useCallback, useEffect, useState } from 'react'
-import headDashboard from '../../dashboard/headDashboard'
+import HeadDashboard from '../../dashboard/HeadDashboard'
 import FieldCreate from '../../component/FieldCreate'
 import { Radio, RadioGroup } from '@nextui-org/react'
 import stepList from '../stepList'
@@ -11,7 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { getProjectDetail } from '../../../../services/manage'
 
-export default function create({params}:{ params: {id:string}}) {
+export default function Create({params}:{ params: {id:string}}) {
   const [projectDetail, setProjectDetail] = useState([]);
   const token = Cookies.get('token');
   const router = useRouter();
@@ -78,7 +78,7 @@ export default function create({params}:{ params: {id:string}}) {
   return (
     <>
     <section>
-        {headDashboard()}
+        <HeadDashboard/>
 
           <div className='px-10 py-7'>
 

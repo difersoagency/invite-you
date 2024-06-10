@@ -1,6 +1,6 @@
 "use client"
 
-import headDashboard from '@/app/dashboard/headDashboard'
+import headDashboard from '@/app/dashboard/HeadDashboard'
 import React, { useCallback, useEffect, useState } from 'react'
 import stepList from '../../../stepList'
 import TemplateDiv from '../TemplateDiv'
@@ -9,7 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { getProjectDetail } from '../../../../../../services/manage'
 
-export default function page({params}:{ params: {id:string}}) {
+export default function Page({params}:{ params: {id:string}}) {
   const [template,setTemplate] = useState("");
   const router = useRouter();
 
