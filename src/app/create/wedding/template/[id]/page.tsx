@@ -73,7 +73,7 @@ export default function Page({params}:{ params: {id:string}}) {
           
         </div>
         
-        <button className='px-6 mx-auto py-2 text-xs bg-gold text-white rounded-md' onClick={onSubmit}>Next</button>
+        <button className='px-6 mx-auto py-2 text-xs bg-gold text-white rounded-md' onClick={onSubmit}>Nexts</button>
       </div>
     </section>
     <ToastContainer></ToastContainer>
