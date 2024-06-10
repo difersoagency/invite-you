@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState, } from 'react'
 import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, getKeyValue, ChipProps, Tooltip, User, Chip, Button, } from '@nextui-org/react'
-import headDashboard from './HeadDashboard'
+import HeadDashboard from './HeadDashboard'
 import {EyeIcon} from './../component/icon/EyeIcon'
 import {DeleteIcon} from './../component/icon/DeleteIcon'
 import {EditIcon} from './../component/icon/EditIcon'
@@ -163,7 +163,7 @@ export default  function Dashboard() {
       </Modal>
 
     <section>
-        {headDashboard()}
+        <HeadDashboard/>
 
         
         <div className='px-10 py-7'>

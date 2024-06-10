@@ -1,6 +1,6 @@
 "use client"
 
-import headDashboard from '@/app/dashboard/HeadDashboard'
+import HeadDashboard from '@/app/dashboard/HeadDashboard'
 import React, { useCallback, useEffect, useState } from 'react'
 import stepList from '../../../stepList'
 import TemplateDiv from '../TemplateDiv'
@@ -53,7 +53,7 @@ export default function Page({params}:{ params: {id:string}}) {
   return (
     <>
     <section>
-      {headDashboard()}
+      <HeadDashboard/>
 
       <div className='px-10 py-7 text-center'>
         {/* {stepList()} */}
