@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useCallback, useEffect, useState } from 'react'
-import HeadDashboard from '../../dashboard/HeadDashboard'
+import HeadDashboard from '@/app/dashboard/HeadDashboard'
 import FieldCreate from '../../component/FieldCreate'
 import { Radio, RadioGroup } from '@nextui-org/react'
 import stepList from '../stepList'

@@ -2,8 +2,6 @@
 
 import HeadDashboard from '@/app/dashboard/HeadDashboard'
 import React, { useCallback, useEffect, useState } from 'react'
-import stepList from '../../stepList'
-import FieldText from '@/app/component/FieldText'
 import FieldDetail from '@/app/component/FieldDetail'
 import { Select, SelectItem } from '@nextui-org/react'
 import { songs } from '@/app/data/data'
