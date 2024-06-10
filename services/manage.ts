@@ -109,7 +109,7 @@ export async function deleteMusic(id : string) {
       return res
 }
 export async function storeMusic(file : string) {
-    const response = await axios.post(`${ROOT_API}/music/store/`,file, {headers:getToken()}).catch((err) => err.response)
+    const response = await axios.post(`${ROOT_API}/music/store/`,file).catch((err) => err.response)
   
     if (response.status > 300) {
        

@@ -79,7 +79,12 @@ export default  function Dashboard() {
   const closeModal = () => {
     setPlayModalOpen(false);
   };
-  
+  const config = {
+    headers: {
+      'content-type': 'multipart/form-data',
+    }
+  };
+
   const onSubmit =  async () => {
     setUploading(true);
     if(audioFile == ''){
@@ -88,7 +93,9 @@ export default  function Dashboard() {
       return
     }
     try {
-      const response = await storeMusic(audioFile);
+      const formData = new FormData();
+      formData.append('audioFile', audioFile);
+      const response = await axios.post(`${ROOT_API}/music/store`, audioFile, config);
       if (response.status >= 200 && response.status < 300) {
         toast.success("Berhasil di Upload",
           {   
@@ -102,7 +109,7 @@ export default  function Dashboard() {
         toast.error(response.message);
     }
     } catch (error) {
-      toast.error('Gagal Di Upload');
+      toast.error(error);
     }
   }
 
