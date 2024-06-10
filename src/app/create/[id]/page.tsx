@@ -22,7 +22,7 @@ export default function Create({params}:{ params: {id:string}}) {
   
   
 
-  const getProjectDetailAPI = useCallback(async (id) =>{
+  const getProjectDetailAPI = useCallback(async (id : any) =>{
     const data = await getProjectDetail(id)
 
     if(data.status > 300 ){

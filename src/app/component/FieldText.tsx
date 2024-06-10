@@ -5,7 +5,7 @@ import React, {useState} from 'react'
 export default function FieldText(props:any) {
   const [value, setValue] = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = (e :any) => {
     setValue(e.target.value);
     if(props.onChange){
       props.onChange(e.target.value);
