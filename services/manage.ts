@@ -38,6 +38,29 @@ export async function getProjectList() {
 
     return res
 }
+export async function getTemplateList(jenis) {
+    const response = await axios.get(`${ROOT_API}/template/list/${jenis}`,{headers: getToken()}).catch((err) => err.response)
+  
+
+    if (response.status > 300) {
+       
+      const res = {
+            status : response.status,
+            data : [],
+            message : response.data.message,
+        }
+
+        return res
+      }
+
+      const res = {
+        status : response.status,
+        data : response.data.data,
+        message : response.data.message,
+    }
+
+    return res
+}
 export async function getMusicList() {
     const response = await axios.get(`${ROOT_API}/music/list`,{headers: getToken()}).catch((err) => err.response)
   
