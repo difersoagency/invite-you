@@ -42,9 +42,9 @@ export default function Page() {
     const [fotoWanitaView , setFotowanitaView] = useState(null)
     const [isCheckedFotoWanita , setCheckedFotoWanita] = useState(false)
     //Data Akad
-    const [alamatResepsi , setAlamatresepsi] = useState("")
-    const [tglResepsi , setTglresepsi] = useState("")
-    const [waktuResepsi , setWakturesepsi] = useState("")
+    const [alamatLamaran , setAlamatlamaran] = useState("")
+    const [tglLamaran , setTgllamaran] = useState("")
+    const [waktuLamaran , setWaktulamaran] = useState("")
  
     const config = {
         headers: {
@@ -78,7 +78,7 @@ export default function Page() {
           musik == ''  || gambarUtama == '' || gambarCover == '' || namaPria == '' ||
         kataPengantar == '' || namaLengkapPria == '' || ayahPria == '' || ibuPria == '' || (fotoPria == '' && isCheckedFotoPria) ||
         namaWanita == '' || namaLengkapWanita == '' || ayahWanita == '' || ibuWanita == '' || (fotoWanita == '' && isCheckedFotoWanita) ||
-        alamatResepsi == '' || tglResepsi == '' || waktuResepsi == ''
+        alamatLamaran == '' || tglLamaran == '' || waktuLamaran == ''
        
         ){
             toast.error('Lengkapi Form')
@@ -106,9 +106,9 @@ export default function Page() {
     formData.append('ayahWanita', ayahWanita);
     formData.append('ibuWanita', ibuWanita);
     isCheckedFotoWanita && formData.append('fotoWanita', fotoWanita);
-    formData.append('alamatResepsi', alamatResepsi);
-    formData.append('tglResepsi', tglResepsi);
-    formData.append('waktuResepsi', waktuResepsi);
+    formData.append('alamatLamaran', alamatLamaran);
+    formData.append('tglLamaran', tglLamaran);
+    formData.append('waktuLamaran', waktuLamaran);
 
 
 console.log(formData)
@@ -318,11 +318,11 @@ console.log(formData)
                         <h2 className='text-dark font-bold  mb-5'>Data Lamaran</h2>
 
                         <div className=' px-6 py-7 border border-gold flex flex-col gap-7 w-full md:w-4/5'>
-                            <FieldDetail usefor='alamat' label='Lokasi Lamaran' desc='' placeholder='Alamat Lokasi' type='text' value={alamatResepsi} onChange={setAlamatresepsi} />
+                            <FieldDetail usefor='alamat' label='Lokasi Lamaran' desc='' placeholder='Alamat Lokasi' type='text' value={alamatLamaran} onChange={setAlamatlamaran} />
 
-                            <FieldDetail usefor='tanggal' label='Tanggal Lamaran' desc='' placeholder='Tanggal / Bulan / Tahun' type='date' value={tglResepsi} onChange={setTglresepsi} />
+                            <FieldDetail usefor='tanggal' label='Tanggal Lamaran' desc='' placeholder='Tanggal / Bulan / Tahun' type='date' value={tglLamaran} onChange={setTgllamaran} />
 
-                            <FieldDetail usefor='waktu' label='Waktu Lamaran' desc='' placeholder='Jam Lamaran' type='time' value={waktuResepsi} onChange={setWakturesepsi} />
+                            <FieldDetail usefor='waktu' label='Waktu Lamaran' desc='' placeholder='Jam Lamaran' type='time' value={waktuLamaran} onChange={setWaktulamaran} />
 
                         </div>
                     </div>

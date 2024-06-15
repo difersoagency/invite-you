@@ -80,7 +80,7 @@ export default function Page() {
 
 
     const onSubmit = async () => {
-      //  setUploading(true);
+      setUploading(true);
         if(
           
             namaPasangan == '' || musik == '' || gambarUtama == '' || gambarCover == '' || namaPria == '' ||
@@ -90,7 +90,7 @@ export default function Page() {
         (gallery.length === 0 && isCheckedGallery)
         ){
             toast.error('Lengkapi Form')
-        //    setUploading(false);
+        setUploading(false);
         }else{
         const undanganFormStr = localStorage.getItem('undanganForm');
         const undanganForm = JSON.parse(undanganFormStr);
@@ -127,29 +127,29 @@ export default function Page() {
       formData.append('gallery[]', gallery[i]);
     }
     }
-    console.log(formData);
-            // try {
-            //     const response = await axios.post(`${ROOT_API}/project/store`, formData, config);
+
+            try {
+                const response = await axios.post(`${ROOT_API}/project/store`, formData, config);
                 
-            //     if (response.status >= 200 && response.status < 300) {
-            //         localStorage.removeItem("undanganForm");
-            //         toast.success("Berhasil di Upload",
-            //         {   
-            //             onClose: () => {
-            //             setTimeout(()=>{
-            //                 router.push('/dashboard');
-            //             },500)
-            //         }
-            //         });
-            //     } else {
-            //         toast.error('Gagal di Publish');
-            //         setUploading(false);
-            //     }
-            // } catch (error) {
-            //     console.error('Error:', error);
-            //     toast.error('Gagal di Publish');
-            //     setUploading(false);
-            // }
+                if (response.status >= 200 && response.status < 300) {
+                    localStorage.removeItem("undanganForm");
+                    toast.success("Berhasil di Upload",
+                    {   
+                        onClose: () => {
+                        setTimeout(()=>{
+                            router.push('/dashboard');
+                        },500)
+                    }
+                    });
+                } else {
+                    toast.error('Gagal di Publish');
+                    setUploading(false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toast.error('Gagal di Publish');
+                setUploading(false);
+            }
     }
        
     }
