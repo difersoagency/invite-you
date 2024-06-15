@@ -103,11 +103,16 @@ export default function Page({params}:{ params: {id:string}}) {
           }
         },[params.id])
 
-
+        const handleChange = (event) => {
+            const value = event.target.value;
+            setMusik(value);
+            setdefaultMusik([value]);
+          };
+    
      
 
     const onSubmit = async () => {
-      //  setUploading(true);
+     setUploading(true);
         if(
           musik == ''  || gambarUtama == '' || gambarCover == '' || namaPria == '' ||
         kataPengantar == '' || namaLengkapPria == '' || ayahPria == '' || ibuPria == '' || (fotoPria == '' && isCheckedFotoPria) ||
@@ -116,7 +121,7 @@ export default function Page({params}:{ params: {id:string}}) {
        
         ){
             toast.error('Lengkapi Form')
-        //    setUploading(false);
+       setUploading(false);
         }else{
         const undanganFormStr = localStorage.getItem('undanganForm');
         const undanganForm = JSON.parse(undanganFormStr);
@@ -145,29 +150,29 @@ export default function Page({params}:{ params: {id:string}}) {
     formData.append('waktuLamaran', waktuLamaran);
 
 
-console.log(formData)
-            // try {
-            //     const response = await axios.post(`${ROOT_API}/project/store`, formData, config);
+
+            try {
+                const response = await axios.post(`${ROOT_API}/project/update/${params.id}`, formData, config);
                 
-            //     if (response.status >= 200 && response.status < 300) {
-            //         localStorage.removeItem("undanganForm");
-            //         toast.success("Berhasil di Upload",
-            //         {   
-            //             onClose: () => {
-            //             setTimeout(()=>{
-            //                 router.push('/dashboard');
-            //             },500)
-            //         }
-            //         });
-            //     } else {
-            //         toast.error('Gagal di Publish');
-            //         setUploading(false);
-            //     }
-            // } catch (error) {
-            //     console.error('Error:', error);
-            //     toast.error('Gagal di Publish');
-            //     setUploading(false);
-            // }
+                if (response.status >= 200 && response.status < 300) {
+                    localStorage.removeItem("undanganForm");
+                    toast.success("Berhasil di Upload",
+                    {   
+                        onClose: () => {
+                        setTimeout(()=>{
+                            router.push('/dashboard');
+                        },500)
+                    }
+                    });
+                } else {
+                    toast.error('Gagal di Publish');
+                    setUploading(false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toast.error('Gagal di Publish');
+                setUploading(false);
+            }
     }
        
     }
@@ -202,7 +207,7 @@ console.log(formData)
                     <div className='border border-gray px-4 py-7'>
                         <label htmlFor='pengantar' className='font-bold text-left text-xs'>Musik</label>
                         <p className='text-gray text-[0.6rem] mb-2 '>Pilih Musik yang ingin Anda gunakan</p>
-                        <Select label='Musik Pilihan' value={musik}  selectedKeys={defaultMusik}  onChange={(event) => setMusik(event.target.value)} >
+                        <Select label='Musik Pilihan' value={musik}  selectedKeys={defaultMusik}  onChange={handleChange} >
                             {musicList.map((music) => (
                                 <SelectItem key={music.id} value={music.id}>
                                     {music.judul}

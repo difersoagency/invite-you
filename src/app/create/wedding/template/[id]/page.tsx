@@ -67,7 +67,7 @@ export default function page({params}:{ params: {id:string}}) {
               <label htmlFor={option.id} className="inline-flex items-center justify-between w-full p-5 text-dark bg-white peer-checked:border rounded-lg cursor-pointer  peer-checked:border-gold peer-checked:text-gold peer-checked:bg-cream hover:text-gold hover:bg-cream  ">                           
                   <div className="block">
                       <img src={option.preview_img} alt="" width={300} height={200}/>
-                      <p className='mt-2 text-xs font-bold'>{option.id}</p>
+                      <p className='mt-2 text-xs font-bold'>{option.nama}</p>
                   </div>
               </label>
           </div>
