@@ -18,14 +18,12 @@ export default function Page() {
     const ROOT_API = process.env.NEXT_PUBLIC_API;
     const [uploading, setUploading] = useState(false);
     const [musicList, setMusiclist] = useState([]);
-    const [namaPasangan , setNamapasangan] = useState("")
     const [musik , setMusik] = useState("")
     const [gambarUtama , setGambarutama] = useState("")
     const [gambarUtamaView, setGambarutamaView] = useState(null)
     const [gambarCover , setGambarcover] = useState("")
     const [gambarCoverView , setGambarcoverView] = useState(null)
     const [kataPengantar , setKatapengantar] = useState("")
-    const [pesan , setPesan] = useState("")
     //Pria
     const [namaPria , setNamapria] = useState("")
     const [namaLengkapPria , setNamalengkappria] = useState("")
@@ -33,6 +31,8 @@ export default function Page() {
     const [ibuPria , setIbupria] = useState("")
     const [fotoPria , setFotopria] = useState("")
     const [fotoPriaView , setFotopriaView] = useState(null)
+    const [isCheckedFotoPria , setCheckedFotoPria] = useState(false)
+    
     //Wanita
     const [namaWanita , setNamawanita] = useState("")
     const [namaLengkapWanita , setNamalengkapwanita] = useState("")
@@ -40,13 +40,12 @@ export default function Page() {
     const [ibuWanita , setIbuwanita] = useState("")
     const [fotoWanita , setFotowanita] = useState("")
     const [fotoWanitaView , setFotowanitaView] = useState(null)
+    const [isCheckedFotoWanita , setCheckedFotoWanita] = useState(false)
     //Data Akad
-    const [alamatResepsi , setAlamatresepsi] = useState("")
-    const [tglResepsi , setTglresepsi] = useState("")
-    const [waktuResepsi , setWakturesepsi] = useState("")
-    //Tambahan
-    const [gallery,setGallery] = useState([]);
-    const [galleryView,setGalleryView] = useState([]);
+    const [alamatLamaran , setAlamatlamaran] = useState("")
+    const [tglLamaran , setTgllamaran] = useState("")
+    const [waktuLamaran , setWaktulamaran] = useState("")
+ 
     const config = {
         headers: {
           'content-type': 'multipart/form-data',
@@ -70,14 +69,17 @@ export default function Page() {
           
         },[])
 
+
+     
+
     const onSubmit = async () => {
         setUploading(true);
         if(
-          
-            namaPasangan == '' || musik == '' || gambarUtama == '' || gambarCover == '' || namaPria == '' ||
-        kataPengantar == '' || namaLengkapPria == '' || ayahPria == '' || ibuPria == '' || fotoPria == '' ||
-        namaWanita == '' || namaLengkapWanita == '' || ayahWanita == '' || ibuWanita == '' || fotoWanita == '' ||
-        alamatResepsi == '' || tglResepsi == '' || waktuResepsi == ''|| gallery.length === 0
+          musik == ''  || gambarUtama == '' || gambarCover == '' || namaPria == '' ||
+        kataPengantar == '' || namaLengkapPria == '' || ayahPria == '' || ibuPria == '' || (fotoPria == '' && isCheckedFotoPria) ||
+        namaWanita == '' || namaLengkapWanita == '' || ayahWanita == '' || ibuWanita == '' || (fotoWanita == '' && isCheckedFotoWanita) ||
+        alamatLamaran == '' || tglLamaran == '' || waktuLamaran == ''
+       
         ){
             toast.error('Lengkapi Form')
             setUploading(false);
@@ -90,29 +92,26 @@ export default function Page() {
     formData.append('emailKlien', undanganForm.emailKlien);
     formData.append('acara', undanganForm.acara);
     formData.append('template', undanganForm.template);
-    formData.append('namaPasangan', namaPasangan);
     formData.append('musik', musik);
     formData.append('gambarUtama', gambarUtama);
     formData.append('gambarCover', gambarCover);
     formData.append('namaPria', namaPria);
     formData.append('kataPengantar', kataPengantar);
-    formData.append('pesan', pesan);
     formData.append('namaLengkapPria', namaLengkapPria);
     formData.append('ayahPria', ayahPria);
     formData.append('ibuPria', ibuPria);
-    formData.append('fotoPria', fotoPria);
+    isCheckedFotoPria && formData.append('fotoPria', fotoPria);
     formData.append('namaWanita', namaWanita);
     formData.append('namaLengkapWanita', namaLengkapWanita);
     formData.append('ayahWanita', ayahWanita);
     formData.append('ibuWanita', ibuWanita);
-    formData.append('fotoWanita', fotoWanita);
-    formData.append('alamatResepsi', alamatResepsi);
-    formData.append('tglResepsi', tglResepsi);
-    formData.append('waktuResepsi', waktuResepsi);
+    isCheckedFotoWanita && formData.append('fotoWanita', fotoWanita);
+    formData.append('alamatLamaran', alamatLamaran);
+    formData.append('tglLamaran', tglLamaran);
+    formData.append('waktuLamaran', waktuLamaran);
 
-    for (let i = 0; i < gallery.length; i++) {
-      formData.append('gallery[]', gallery[i]);
-    }
+
+console.log(formData)
             try {
                 const response = await axios.post(`${ROOT_API}/project/store`, formData, config);
                 
@@ -139,8 +138,8 @@ export default function Page() {
        
     }
   return (
-    <>
-    <section>
+   <>
+       <section>
         <HeadDashboard/>
         <div className='px-10 py-7'>
             {/* Step Navigator */}
@@ -164,6 +163,7 @@ export default function Page() {
                             </div>
                         </div> : ''
                         }
+                    </div>
                     </div>
                     <div className='border border-gray px-4 py-7'>
                         <label htmlFor='pengantar' className='font-bold text-left text-xs'>Musik</label>
@@ -241,7 +241,12 @@ export default function Page() {
                             <FieldDetail usefor='ibu-pria' label='Nama Ibu (Pria)' desc='' placeholder='Nama Ibu Pria' type='text' value={ibuPria} onChange={setIbupria} />
 
                             <div>
-                                <input type="checkbox" name="fotop" id="fotop" className='peer/fotop'/>
+                                <input type="checkbox" name="fotop" id="fotop" className='peer/fotop'    onChange={(event) => {
+                                    setFotopriaView(null)
+                                    setFotopria("")
+                                    setCheckedFotoPria(!isCheckedFotoPria); 
+                            
+                                }} />
                                 <label htmlFor='fotop' className='font-bold text-left text-xs ml-3'>Foto Pria</label>
                                 <p className='text-gray text-[0.6rem] mb-2 '>Masukkan Foto Pria</p>
                                 <input type="file" className='p-pict text-xs peer-checked/fotop:block hidden' 
@@ -280,7 +285,12 @@ export default function Page() {
 
                             <FieldDetail usefor='ibu-wanita' value={ibuWanita} onChange={setIbuwanita} label='Nama Ibu (Wanita)' desc='' placeholder='Nama Ibu Wanita' type='text' />
                             <div>
-                                <input type="checkbox" name="fotow" id="fotow" className='peer/fotow'/>
+                                <input type="checkbox" name="fotow" id="fotow" className='peer/fotow' onChange={(event) => {
+                                    setFotowanitaView(null)
+                                    setFotowanita("")
+                                    setCheckedFotoWanita(!isCheckedFotoWanita); 
+                            
+                                }}/>
                                 <label htmlFor='fotow' className=' font-bold text-left text-xs ml-3'>Foto Wanita</label>
                                 <p className='text-gray text-[0.6rem] mb-2 '>Masukkan Foto Wanita</p>
                                 <input type="file" className='w-pict text-xs hidden peer-checked/fotow:block' 
@@ -308,11 +318,11 @@ export default function Page() {
                         <h2 className='text-dark font-bold  mb-5'>Data Lamaran</h2>
 
                         <div className=' px-6 py-7 border border-gold flex flex-col gap-7 w-full md:w-4/5'>
-                            <FieldDetail usefor='alamat' label='Lokasi Lamaran' desc='' placeholder='Alamat Lokasi' type='text' value={alamatResepsi} onChange={setAlamatresepsi} />
+                            <FieldDetail usefor='alamat' label='Lokasi Lamaran' desc='' placeholder='Alamat Lokasi' type='text' value={alamatLamaran} onChange={setAlamatlamaran} />
 
-                            <FieldDetail usefor='tanggal' label='Tanggal Lamaran' desc='' placeholder='Tanggal / Bulan / Tahun' type='date' value={tglResepsi} onChange={setTglresepsi} />
+                            <FieldDetail usefor='tanggal' label='Tanggal Lamaran' desc='' placeholder='Tanggal / Bulan / Tahun' type='date' value={tglLamaran} onChange={setTgllamaran} />
 
-                            <FieldDetail usefor='waktu' label='Waktu Lamaran' desc='' placeholder='Jam Lamaran' type='time' value={waktuResepsi} onChange={setWakturesepsi} />
+                            <FieldDetail usefor='waktu' label='Waktu Lamaran' desc='' placeholder='Jam Lamaran' type='time' value={waktuLamaran} onChange={setWaktulamaran} />
 
                         </div>
                     </div>
@@ -321,7 +331,7 @@ export default function Page() {
             <button className='text-xs bg-gold text-dark px-6 py-2' disabled={uploading} onClick={ onSubmit }>{uploading ? 'Tunggu Sebentar..' : 'Publish Undangan'}</button>
         </div>
     </section>
-    <ToastContainer></ToastContainer>
-    </>
+   <ToastContainer></ToastContainer>
+   </>
   )
 }

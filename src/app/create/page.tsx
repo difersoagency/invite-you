@@ -52,7 +52,7 @@ export default function Create() {
       
       localStorage.setItem('undanganForm',JSON.stringify(undanganForm))
       // if wedding
-      router.push('/create/wedding/template')
+      router.push(`/create/${acara}/template`)
         } else {
           toast.error('Email Tidak Valid')
         }
@@ -95,7 +95,7 @@ export default function Create() {
 
                 <div className='mt-6'>
                   <RadioGroup label='Pilih Kebutuhan Acara Anda' size='sm' orientation='horizontal' value={acara} onChange={(event => setAcara(event.target.value))}>
-                    <CustomRadio className='text-xs text-gold px-10' value="birthday" >Birthday</CustomRadio>
+                    {/* <CustomRadio className='text-xs text-gold px-10' value="birthday" >Birthday</CustomRadio> */}
                     <CustomRadio className='text-xs text-gold px-10' value="wedding">Wedding</CustomRadio>
                     <CustomRadio className='text-xs text-gold px-10' value="engagement">Engagement</CustomRadio>
                   </RadioGroup>
