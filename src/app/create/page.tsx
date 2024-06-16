@@ -62,9 +62,9 @@ export default function Create() {
 
 
   
-  // if(!token) {
-  //   router.replace('/login');
-  //   }
+  if(!token) {
+    router.push('/login');
+    }
  
 
   return (

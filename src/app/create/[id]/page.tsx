@@ -90,9 +90,9 @@ export default function Create({params}:{ params: {id:string}}) {
 
 
   
-  // if(!token) {
-  //   router.replace('/login');
-  //   }
+  if(!token) {
+    router.push('/login');
+    }
  
 
   return (
@@ -124,8 +124,18 @@ export default function Create({params}:{ params: {id:string}}) {
                 <div className='mt-6'>
                   <RadioGroup label='Pilih Kebutuhan Acara Anda' size='sm' orientation='horizontal' value={acara} onChange={(event => setAcara(event.target.value))}>
                     {/* <CustomRadio className='text-xs text-gold px-10' value="birthday" >Birthday</CustomRadio> */}
-                    <CustomRadio className='text-xs text-gold px-10' value="wedding">Wedding</CustomRadio>
-                    <CustomRadio className='text-xs text-gold px-10' value="engagement">Engagement</CustomRadio>
+                    {/* <CustomRadio className='text-xs text-gold px-10' value="wedding">Wedding</CustomRadio>
+                    <CustomRadio className='text-xs text-gold px-10' value="engagement">Engagement</CustomRadio> */}
+                       {acara === 'wedding' && (
+        <CustomRadio className='text-xs text-gold px-10' value="wedding">
+          Wedding
+        </CustomRadio>
+      )}
+      {acara === 'engagement' && (
+        <CustomRadio className='text-xs text-gold px-10' value="engagement">
+          Engagement
+        </CustomRadio>
+      )}
                   </RadioGroup>
                 </div>
               </div>

@@ -11,10 +11,15 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { useRouter } from 'next/navigation'
 import { getMusicList, getProjectDetail } from '../../../../../../services/manage'
-
+import Cookies from 'js-cookie'
 
 export default function Page({params}:{ params: {id:string}}) {
     const router = useRouter();
+    const token = Cookies.get('token');
+    if(!token) {
+      router.push('/login');
+      }
+ 
     const ROOT_API = process.env.NEXT_PUBLIC_API;
     const [defaultMusik, setdefaultMusik] = useState([]);
     const [uploading, setUploading] = useState(false);
