@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { getProjectDetail, getTemplateList } from '../../../../../../services/manage'
+import Cookies from 'js-cookie'
 
 export default function page({params}:{ params: {id:string}}) {
   const [template,setTemplate] = useState(0);
@@ -16,6 +17,10 @@ export default function page({params}:{ params: {id:string}}) {
   const undanganFormStr = localStorage.getItem('undanganForm');
   const undanganForm = JSON.parse(undanganFormStr);
 
+  const token = Cookies.get('token');
+  if(!token) {
+    router.push('/login');
+    }
 
   const getProjectDetailAPI = useCallback(async (id) =>{
     const data = await getProjectDetail(id)

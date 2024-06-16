@@ -45,10 +45,11 @@ export default  function Dashboard() {
     getProjectListAPI()
     
   },[])
-
-  // if(!token) {
-  //   router.replace('/login');
-  //   }
+  const router = useRouter();
+  const token = Cookies.get('token');
+  if(!token) {
+    router.push('/login');
+    }
 
   const openNewTab = (link) => {
     const url =  `${process.env.NEXT_PUBLIC_WEB}${link}`;
@@ -192,7 +193,3 @@ export default  function Dashboard() {
   )
 }
 
-// export async function getServerSideProps({req} : {req:NextApiRequest}){
-//   const {token} = req.cookies;
-//   console.log(token);
-// }

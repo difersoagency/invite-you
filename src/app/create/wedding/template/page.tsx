@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { getTemplateList } from '../../../../../services/manage'
+import Cookies from 'js-cookie'
 
 export default function Page() {
   const [template,setTemplate] = useState("");
@@ -15,7 +16,11 @@ export default function Page() {
   const router = useRouter();
   const undanganFormStr = localStorage.getItem('undanganForm');
   const undanganForm = JSON.parse(undanganFormStr);
-  console.log(template)
+
+  const token = Cookies.get('token');
+  if(!token) {
+    router.push('/login');
+    }
 
   const getTemplateListAPI = useCallback( async () =>{
     const data = await getTemplateList(undanganForm.acara)
