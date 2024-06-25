@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useCallback, useEffect, useState } from 'react'
-import HeadDashboard from '../../dashboard/HeadDashboard'
+import HeadDashboard from '../../dashboard/headDashboard'
 import FieldCreate from '../../component/FieldCreate'
 import { Radio, RadioGroup, cn } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'

@@ -1,6 +1,6 @@
 "use client"
 
-import HeadDashboard from '@/app/dashboard/HeadDashboard'
+import HeadDashboard from '@/app/dashboard/headDashboard'
 import React, { useCallback, useEffect, useState } from 'react'
 import stepList from '../../../stepList'
 import TemplateDiv from '../TemplateDiv'

@@ -1,13 +1,14 @@
 "use client"
 
 import React, { useState } from 'react'
-import HeadDashboard from '../dashboard/HeadDashboard'
 import FieldCreate from '../component/FieldCreate'
 import { Radio, RadioGroup, cn } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
+import HeadDashboard from '../dashboard/headDashboard'
+
 
 
 export const CustomRadio = (props:any) => {
@@ -71,7 +72,7 @@ export default function Create() {
     
     <>
     <section>
-        <HeadDashboard/>
+        {HeadDashboard()}
 
           <div className='px-10 py-14'>
 
