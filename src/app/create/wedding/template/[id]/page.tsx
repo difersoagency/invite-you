@@ -10,7 +10,7 @@ import 'react-toastify/ReactToastify.css';
 import { getProjectDetail, getTemplateList } from '../../../../../../services/manage'
 import Cookies from 'js-cookie'
 
-export default function page({params}:{ params: {id:string}}) {
+export default function Page({params}:{ params: {id:string}}) {
   const [template,setTemplate] = useState(0);
   const [templateList, setTemplatelist] = useState([]);
   const router = useRouter();
