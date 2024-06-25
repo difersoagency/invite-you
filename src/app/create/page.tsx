@@ -11,7 +11,7 @@ import HeadDashboard from '../dashboard/headDashboard'
 
 
 
-export const CustomRadio = (props:any) => {
+const CustomRadio = (props:any) => {
   const {children, ...otherProps} = props;
 
   return (
