@@ -23,13 +23,14 @@ export default function Page({params}:{ params: {id:string}}) {
     const ROOT_API = process.env.NEXT_PUBLIC_API;
     const [uploading, setUploading] = useState(false);
     const [musicList, setMusiclist] = useState([]);
-    const [defaultMusik, setdefaultMusik] = useState([]);
+    const [defaultMusik, setdefaultMusik] = useState<any[]>([]);
     const [musik , setMusik] = useState("")
     const [gambarUtama , setGambarutama] = useState("")
-    const [gambarUtamaView, setGambarutamaView] = useState(null)
-    const [gambarCover , setGambarcover] = useState("")
-    const [gambarCoverView , setGambarcoverView] = useState(null)
+    const [gambarUtamaView, setGambarutamaView] = useState("")
+    const [gambarCover , setGambarcover] = useState<any>(null); 
+    const [gambarCoverView , setGambarcoverView] = useState<any>(null); 
     const [kataPengantar , setKatapengantar] = useState("")
+    
     //Pria
     const [namaPria , setNamapria] = useState("")
     const [namaLengkapPria , setNamalengkappria] = useState("")
@@ -58,7 +59,7 @@ export default function Page({params}:{ params: {id:string}}) {
         }
       };
 
-      const getProjectDetailAPI = useCallback(async (id) =>{
+      const getProjectDetailAPI = useCallback(async (id : any) =>{
         const data = await getProjectDetail(id)
         if(data.status > 300 ){
             toast.error(data.data.message)
@@ -66,7 +67,7 @@ export default function Page({params}:{ params: {id:string}}) {
         // setProjectDetail(data)
         setMusiclist(data.data.musicList)
         setMusik(data.data.musik)
-        setdefaultMusik([data.data.musik])
+        setdefaultMusik([data.data.musik] as any[]);
         setGambarutama(data.data.gambarUtama)
         setGambarutamaView(data.data.gambarUtamaView)
         setGambarcover(data.data.gambarCover)
@@ -108,7 +109,7 @@ export default function Page({params}:{ params: {id:string}}) {
           }
         },[params.id])
 
-        const handleChange = (event) => {
+        const handleChange = (event : any) => {
             const value = event.target.value;
             setMusik(value);
             setdefaultMusik([value]);
@@ -129,7 +130,8 @@ export default function Page({params}:{ params: {id:string}}) {
        setUploading(false);
         }else{
         const undanganFormStr = localStorage.getItem('undanganForm');
-        const undanganForm = JSON.parse(undanganFormStr);
+        const undanganForm = undanganFormStr ? JSON.parse(undanganFormStr) : null;
+        
        
     const formData = new FormData();
     formData.append('namaKlien', undanganForm.namaKlien);
@@ -196,7 +198,8 @@ export default function Page({params}:{ params: {id:string}}) {
                         <input type="file" className='utama-pict text-xs'  
                         onChange={(event) => {
                             setGambarutamaView(URL.createObjectURL(event.target.files[0]))
-                                    return setGambarutama(event.target.files[0])    
+                            return setGambarutama(event.target.files[0])    
+                            
                                 }} />
                         {gambarUtamaView ? 
                         <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>

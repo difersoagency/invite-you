@@ -38,7 +38,7 @@ export async function getProjectList() {
 
     return res
 }
-export async function getTemplateList(jenis) {
+export async function getTemplateList(jenis:any) {
     const response = await axios.get(`${ROOT_API}/template/list/${jenis}`,{headers: getToken()}).catch((err) => err.response)
   
 

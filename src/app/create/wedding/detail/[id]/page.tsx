@@ -67,7 +67,7 @@ export default function Page({params}:{ params: {id:string}}) {
         }
       };
 
-      const getProjectDetailAPI = useCallback(async (id) =>{
+      const getProjectDetailAPI = useCallback(async (id : any) =>{
         const data = await getProjectDetail(id)
         if(data.status > 300 ){
             toast.error(data.data.message)
@@ -147,7 +147,7 @@ export default function Page({params}:{ params: {id:string}}) {
        setUploading(false);
         }else{
         const undanganFormStr = localStorage.getItem('undanganForm');
-        const undanganForm = JSON.parse(undanganFormStr);
+        const undanganForm = JSON.parse(undanganFormStr as string);
        
     const formData = new FormData();
     formData.append('namaKlien', undanganForm.namaKlien);

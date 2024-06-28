@@ -1,4 +1,4 @@
-import { Radio } from "@nextui-org/react";
+import { Radio, cn } from "@nextui-org/react";
 
 export const CustomRadio = (props:any) => {
     const {children, ...otherProps} = props;
