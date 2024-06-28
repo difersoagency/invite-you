@@ -14,8 +14,14 @@ export default function Page() {
   const [template,setTemplate] = useState("");
   const [templateList, setTemplatelist] = useState([]);
   const router = useRouter();
-  const undanganFormStr = localStorage.getItem('undanganForm');
-  const undanganForm = JSON.parse(undanganFormStr);
+  
+
+  if (typeof window !== "undefined") {
+    const undanganFormStr = localStorage.getItem('undanganForm');
+    const undanganForm = JSON.parse(undanganFormStr);
+  }else{
+    console.warn('localStorage is not available');
+  }
 
   const token = Cookies.get('token');
   if(!token) {
