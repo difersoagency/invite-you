@@ -10,8 +10,7 @@ import 'react-toastify/ReactToastify.css';
 import HeadDashboard from '../dashboard/headDashboard'
 
 
-
-const CustomRadio = (props:any) => {
+export const CustomRadio = (props:any) => {
   const {children, ...otherProps} = props;
 
   return (
@@ -72,7 +71,7 @@ export default function Create() {
     
     <>
     <section>
-        {HeadDashboard()}
+        {HeadDashboard()}  
 
           <div className='px-10 py-14'>
 
