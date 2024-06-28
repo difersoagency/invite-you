@@ -128,14 +128,27 @@ export default function Page({params}:{ params: {id:string}}) {
             toast.error('Lengkapi Form')
        setUploading(false);
         }else{
-        const undanganFormStr = localStorage.getItem('undanganForm');
-        const undanganForm = JSON.parse(undanganFormStr);
+       
        
     const formData = new FormData();
-    formData.append('namaKlien', undanganForm.namaKlien);
-    formData.append('emailKlien', undanganForm.emailKlien);
-    formData.append('acara', undanganForm.acara);
-    formData.append('template', undanganForm.template);
+
+    if (typeof window !== "undefined") {
+               
+        const undanganFormStr = localStorage.getItem('undanganForm');
+        const undanganForm = JSON.parse(undanganFormStr);
+      
+        formData.append('namaKlien', undanganForm.namaKlien);
+        formData.append('emailKlien', undanganForm.emailKlien);
+        formData.append('acara', undanganForm.acara);
+        formData.append('template', undanganForm.template);
+     
+      } else {
+        
+        console.warn('localStorage is not available');
+      }
+
+
+   
     formData.append('musik', musik);
     formData.append('gambarUtama', gambarUtama);
     formData.append('gambarCover', gambarCover);
