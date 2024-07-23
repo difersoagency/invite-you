@@ -57,7 +57,8 @@ export default function Page({ params }: { params: { id: string } }) {
   const [waktuLamaran, setWaktulamaran] = useState("");
   const [noRek, setNorek] = useState("");
   const [isCheckedSumbangan, setCheckedSumbangan] = useState(false);
-
+  //Maps
+  const [mapsLamaran, setmapsLamaran] = useState("");
   const config = {
     headers: {
       "content-type": "multipart/form-data",
@@ -101,6 +102,8 @@ export default function Page({ params }: { params: { id: string } }) {
     setNorek(data.data.noRek);
     setKetRek(data.data.ketRek);
     setCheckedSumbangan(data.data.checkedSumbangan);
+    //Maps
+    setmapsLamaran(data.data.mapsLamaran);
   }, []);
 
   useEffect(() => {
@@ -135,6 +138,7 @@ export default function Page({ params }: { params: { id: string } }) {
       ibuWanita == "" ||
       (fotoWanita == "" && isCheckedFotoWanita) ||
       alamatLamaran == "" ||
+      mapsLamaran == "" ||
       tglLamaran == "" ||
       waktuLamaran == "" ||
       (noRek == "" && isCheckedSumbangan) ||
@@ -172,6 +176,7 @@ export default function Page({ params }: { params: { id: string } }) {
       formData.append("ibuWanita", ibuWanita);
       isCheckedFotoWanita && formData.append("fotoWanita", fotoWanita);
       formData.append("alamatLamaran", alamatLamaran);
+      formData.append("mapsLamaran", mapsLamaran);
       formData.append("tglLamaran", tglLamaran);
       formData.append("waktuLamaran", waktuLamaran);
       isCheckedSumbangan && formData.append("noRek", noRek);
@@ -546,6 +551,16 @@ export default function Page({ params }: { params: { id: string } }) {
                 type="text"
                 value={alamatLamaran}
                 onChange={setAlamatlamaran}
+              />
+
+              <FieldDetail
+                usefor="lamaran-maps"
+                label="Link G-maps"
+                desc=""
+                placeholder="https://goo.gl/maps/xxxxxxxxxxx"
+                type="text"
+                value={mapsLamaran}
+                onChange={setmapsLamaran}
               />
 
               <FieldDetail

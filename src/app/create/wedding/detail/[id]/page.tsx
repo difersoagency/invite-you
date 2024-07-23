@@ -67,6 +67,9 @@ export default function Page({ params }: { params: { id: string } }) {
   const [galleryView, setGalleryView] = useState([]);
   const [galleryViewRecent, setGalleryViewRecent] = useState([]);
   const [isCheckedGallery, setCheckedGallery] = useState(false);
+  //Maps
+  const [mapsAkad, setmapsAkad] = useState("");
+  const [mapsResepsi, setmapsResepsi] = useState("");
   const config = {
     headers: {
       "content-type": "multipart/form-data",
@@ -120,6 +123,9 @@ export default function Page({ params }: { params: { id: string } }) {
     setNorek(data.data.noRek);
     setKetRek(data.data.ketRek);
     setCheckedSumbangan(data.data.checkedSumbangan);
+    //Maps
+    setmapsAkad(data.data.mapsAkad);
+    setmapsResepsi(data.data.mapsResepsi);
   }, []);
 
   useEffect(() => {
@@ -157,7 +163,9 @@ export default function Page({ params }: { params: { id: string } }) {
       (alamatResepsi == "" && isCheckedResepsi) ||
       (tglResepsi == "" && isCheckedResepsi) ||
       (waktuResepsi == "" && isCheckedResepsi) ||
+      (mapsResepsi == "" && isCheckedResepsi) ||
       alamatAkad == "" ||
+      mapsAkad == "" ||
       tglAkad == "" ||
       waktuAkad == "" ||
       (gallery.length === 0 && isCheckedGallery) ||
@@ -198,11 +206,13 @@ export default function Page({ params }: { params: { id: string } }) {
       isCheckedResepsi && formData.append("alamatResepsi", alamatResepsi);
       isCheckedResepsi && formData.append("tglResepsi", tglResepsi);
       isCheckedResepsi && formData.append("waktuResepsi", waktuResepsi);
+      isCheckedResepsi && formData.append("mapsResepsi", mapsResepsi);
       formData.append("alamatAkad", alamatAkad);
       formData.append("tglAkad", tglAkad);
       formData.append("waktuAkad", waktuAkad);
       isCheckedSumbangan && formData.append("noRek", noRek);
       isCheckedSumbangan && formData.append("ketRek", ketRek);
+      formData.append("mapsAkad", mapsAkad);
 
       if (isCheckedGallery) {
         for (let i = 0; i < gallery.length; i++) {
@@ -686,6 +696,16 @@ export default function Page({ params }: { params: { id: string } }) {
                 />
 
                 <FieldDetail
+                  usefor="akad-maps"
+                  label="Link G-maps"
+                  desc=""
+                  placeholder="https://goo.gl/maps/xxxxxxxxxxx"
+                  type="text"
+                  value={mapsAkad}
+                  onChange={setmapsAkad}
+                />
+
+                <FieldDetail
                   usefor="tanggal"
                   label="Tanggal Akad"
                   desc=""
@@ -740,6 +760,16 @@ export default function Page({ params }: { params: { id: string } }) {
                   type="text"
                   value={alamatResepsi}
                   onChange={setAlamatresepsi}
+                />
+
+                <FieldDetail
+                  usefor="resepsi-maps"
+                  label="Link G-maps"
+                  desc=""
+                  placeholder="https://goo.gl/maps/xxxxxxxxxxx"
+                  type="text"
+                  value={mapsResepsi}
+                  onChange={setmapsResepsi}
                 />
 
                 <FieldDetail

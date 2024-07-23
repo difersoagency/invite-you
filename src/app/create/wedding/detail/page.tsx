@@ -62,6 +62,9 @@ export default function Page() {
   const [isCheckedSumbangan, setCheckedSumbangan] = useState(false);
   const [galleryView, setGalleryView] = useState([]);
   const [isCheckedGallery, setCheckedGallery] = useState(false);
+  //Maps
+  const [mapsAkad, setmapsAkad] = useState("");
+  const [mapsResepsi, setmapsResepsi] = useState("");
   const config = {
     headers: {
       "content-type": "multipart/form-data",
@@ -102,7 +105,9 @@ export default function Page() {
       (alamatResepsi == "" && isCheckedResepsi) ||
       (tglResepsi == "" && isCheckedResepsi) ||
       (waktuResepsi == "" && isCheckedResepsi) ||
+      (mapsResepsi == "" && isCheckedResepsi) ||
       alamatAkad == "" ||
+      mapsAkad == "" ||
       tglAkad == "" ||
       waktuAkad == "" ||
       (gallery.length === 0 && isCheckedGallery) ||
@@ -143,11 +148,13 @@ export default function Page() {
       isCheckedResepsi && formData.append("alamatResepsi", alamatResepsi);
       isCheckedResepsi && formData.append("tglResepsi", tglResepsi);
       isCheckedResepsi && formData.append("waktuResepsi", waktuResepsi);
+      isCheckedResepsi && formData.append("mapsResepsi", mapsResepsi);
       formData.append("alamatAkad", alamatAkad);
       formData.append("tglAkad", tglAkad);
       formData.append("waktuAkad", waktuAkad);
       isCheckedSumbangan && formData.append("noRek", noRek);
       isCheckedSumbangan && formData.append("ketRek", ketRek);
+      formData.append("mapsAkad", mapsAkad);
 
       if (isCheckedGallery) {
         for (let i = 0; i < gallery.length; i++) {
@@ -603,6 +610,15 @@ export default function Page() {
                   value={alamatAkad}
                   onChange={setAlamatakad}
                 />
+                <FieldDetail
+                  usefor="akad-maps"
+                  label="Link G-maps"
+                  desc=""
+                  placeholder="https://goo.gl/maps/xxxxxxxxxxx"
+                  type="text"
+                  value={mapsAkad}
+                  onChange={setmapsAkad}
+                />
 
                 <FieldDetail
                   usefor="tanggal"
@@ -658,6 +674,16 @@ export default function Page() {
                   type="text"
                   value={alamatResepsi}
                   onChange={setAlamatresepsi}
+                />
+
+                <FieldDetail
+                  usefor="resepsi-maps"
+                  label="Link G-maps"
+                  desc=""
+                  placeholder="https://goo.gl/maps/xxxxxxxxxxx"
+                  type="text"
+                  value={mapsResepsi}
+                  onChange={setmapsResepsi}
                 />
 
                 <FieldDetail
