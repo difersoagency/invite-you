@@ -51,7 +51,7 @@ export default function Page() {
     } else {
       undanganForm.template = template;
       localStorage.setItem("undanganForm", JSON.stringify(undanganForm));
-      router.push("/create/engagement/detail");
+      router.push("/create/birthday/detail");
     }
   };
 

@@ -211,7 +211,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <div className="px-10 py-7">
           {/* Step Navigator */}
           {/* {stepList()} */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 py-10 items-stretch">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-10 py-10 items-stretch">
             <div className="border border-gray px-4 py-7">
               <label htmlFor="pesan" className="font-bold text-left text-xs">
                 Gambar Pasangan
@@ -251,7 +251,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 ""
               )}
             </div>
-          </div>
+          </div> */}
           <div className="border border-gray px-4 py-7">
             <label htmlFor="pengantar" className="font-bold text-left text-xs">
               Musik
@@ -291,7 +291,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         </div> : ''
                         }
                     </div> */}
-
+{/* 
           <div className="border border-gray px-4 py-7">
             <label htmlFor="pesan" className="font-bold text-left text-xs">
               Gambar Cover
@@ -320,9 +320,9 @@ export default function Page({ params }: { params: { id: string } }) {
             ) : (
               ""
             )}
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             <label htmlFor="pengantar" className="font-bold text-left text-xs">
               Kata Pengantar
             </label>
@@ -337,15 +337,15 @@ export default function Page({ params }: { params: { id: string } }) {
               className="border border-gold px-3 py-2 text-xs  w-full md:w-2/3"
               rows={10}
             ></textarea>
-          </div>
+          </div> */}
 
           <div className="py-5">
-            <h2 className="text-dark font-bold mb-5">Data Pria</h2>
+            <h2 className="text-dark font-bold mb-5">Data Orang</h2>
 
             <div className=" px-6 py-7 border border-gold flex flex-col gap-7 w-full md:w-4/5">
               <FieldDetail
-                usefor="pria"
-                label="Nama Panggilan Pria"
+                usefor="panggilan"
+                label="Nama Panggilan"
                 desc=""
                 placeholder="Nama Panggilan"
                 type="text"
@@ -354,16 +354,16 @@ export default function Page({ params }: { params: { id: string } }) {
               />
 
               <FieldDetail
-                usefor="pria-lengkap"
-                label="Nama Lengkap Pria"
+                usefor="lengkap"
+                label="Nama Lengkap"
                 desc=""
-                placeholder="Nama Lengkap Pria"
+                placeholder="Nama Lengkap"
                 type="text"
                 value={namaLengkapPria}
                 onChange={setNamalengkappria}
               />
 
-              <FieldDetail
+              {/* <FieldDetail
                 usefor="ayah-pria"
                 label="Nama Ayah (Pria)"
                 desc=""
@@ -371,9 +371,9 @@ export default function Page({ params }: { params: { id: string } }) {
                 type="text"
                 value={ayahPria}
                 onChange={setAyahpria}
-              />
+              /> */}
 
-              <FieldDetail
+              {/* <FieldDetail
                 usefor="ibu-pria"
                 label="Nama Ibu (Pria)"
                 desc=""
@@ -381,7 +381,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 type="text"
                 value={ibuPria}
                 onChange={setIbupria}
-              />
+              /> */}
 
               <div>
                 <input
@@ -400,10 +400,10 @@ export default function Page({ params }: { params: { id: string } }) {
                   htmlFor="fotop"
                   className="font-bold text-left text-xs ml-3"
                 >
-                  Foto Pria
+                  Foto Orang
                 </label>
                 <p className="text-gray text-[0.6rem] mb-2 ">
-                  Masukkan Foto Pria
+                  Masukkan Foto Yang Ulang Tahun
                 </p>
                 <input
                   type="file"
@@ -434,7 +434,7 @@ export default function Page({ params }: { params: { id: string } }) {
             </div>
           </div>
 
-          <div className="py-5">
+          {/* <div className="py-5">
             <h2 className="text-dark font-bold  mb-5">Data Wanita</h2>
 
             <div className=" px-6 py-7 border border-gold flex flex-col gap-7 w-full md:w-4/5">
@@ -532,10 +532,10 @@ export default function Page({ params }: { params: { id: string } }) {
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="py-5">
-            <h2 className="text-dark font-bold  mb-5">Data Lamaran</h2>
+            <h2 className="text-dark font-bold  mb-5">Data Acara</h2>
 
             <div className=" px-6 py-7 border border-gold flex flex-col gap-7 w-full md:w-4/5">
               <FieldDetail
@@ -567,12 +567,22 @@ export default function Page({ params }: { params: { id: string } }) {
                 value={waktuLamaran}
                 onChange={setWaktulamaran}
               />
+
+<FieldDetail
+                usefor="keterangan"
+                label="Ketrangan Acara"
+                desc=""
+                placeholder="Keterangan Acara"
+                type="text"
+                value={alamatLamaran}
+                onChange={setAlamatlamaran}
+              />
             </div>
           </div>
 
           <div className="py-5">
             <h2 className="text-dark font-bold  mb-5">
-              Data Sumbangan (Optional)
+              RSVP Whatsapp (Optional)
             </h2>
             <input
               type="checkbox"
@@ -590,24 +600,24 @@ export default function Page({ params }: { params: { id: string } }) {
               htmlFor="sumbangan"
               className="text-xs ml-2 peer-checked/active:text-gold "
             >
-              Menerima Sumbangan
+              RSVP Via Whatsapp
             </label>
 
             <div className=" px-6 py-7 border border-gold flex-col gap-7 w-full md:w-4/5 hidden peer-checked/active:flex mt-5">
               <FieldDetail
-                usefor="norekening"
-                label="No rekening"
+                usefor="nomor"
+                label="No Whatsapp"
                 desc=""
-                placeholder="contoh:111222233"
+                placeholder="contoh:628123123123"
                 type="text"
                 value={noRek}
                 onChange={setNorek}
               />
               <FieldDetail
-                usefor="ket-rekening"
-                label="Keterangan Rekening"
+                usefor="tulisan"
+                label="Jawaban Balasan"
                 desc=""
-                placeholder="a/n David BCA"
+                placeholder="Ya, Saya Hadir"
                 type="text"
                 value={ketRek}
                 onChange={setKetRek}
