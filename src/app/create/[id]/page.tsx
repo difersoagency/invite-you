@@ -120,6 +120,11 @@ export default function Create({params}:{ params: {id:string}}) {
           Engagement
         </CustomRadio>
       )}
+      {acara === 'birthday' && (
+        <CustomRadio className='text-xs text-gold px-10' value="birthday">
+          Birthday
+        </CustomRadio>
+      )}
                   </RadioGroup>
                 </div>
               </div>
