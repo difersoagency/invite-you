@@ -26,6 +26,7 @@ export default function Page() {
   const [musik, setMusik] = useState("");
   const [ketReservasi, setKetReservasi] = useState("");
   const [nama, setNama] = useState("");
+  const [tglLahir, setTglLahir] = useState("");
   const [namaLengkap, setNamalengkap] = useState("");
   const [ketAcara, setKetAcara] = useState("");
   const [foto, setFoto] = useState("");
@@ -33,10 +34,16 @@ export default function Page() {
   const [isCheckedFoto, setCheckedFoto] = useState(false);
 
   const [alamat, setAlamat] = useState("");
+  const [maps, setMaps] = useState("");
   const [tgl, setTgl] = useState("");
   const [waktu, setWaktu] = useState("");
   const [noWa, setNoWa] = useState("");
   const [isCheckedReservasi, setCheckedReservasi] = useState(false);
+
+  const [gallery, setGallery] = useState([]);
+  const [galleryView, setGalleryView] = useState([]);
+  const [isCheckedGallery, setCheckedGallery] = useState(false);
+
 
   const config = {
     headers: {
@@ -66,10 +73,14 @@ export default function Page() {
       (foto == "" && isCheckedFoto) ||
       alamat == "" ||
       tgl == "" ||
+      tglLahir == "" ||
       namaLengkap == "" ||
+      maps == "" ||
       waktu == "" ||
+      (gallery.length === 0 && isCheckedGallery) ||
       (noWa == "" && isCheckedReservasi) ||
       (ketReservasi == "" && isCheckedReservasi)
+      
     ) {
       toast.error("Lengkapi Form");
       setUploading(false);
@@ -90,6 +101,7 @@ export default function Page() {
       formData.append("musik", musik);
       formData.append("nama", nama);    
       formData.append("namaLengkap", namaLengkap);    
+      formData.append("tglLahir", tglLahir);    
       formData.append("ketAcara", ketAcara);    
       isCheckedFoto && formData.append("foto", foto);
       formData.append("alamat", alamat);
@@ -97,6 +109,13 @@ export default function Page() {
       formData.append("waktu", waktu);
       isCheckedReservasi && formData.append("noWa", noWa);
       isCheckedReservasi && formData.append("ketReservasi", ketReservasi);
+      formData.append("maps", maps);
+      if (isCheckedGallery) {
+        for (let i = 0; i < gallery.length; i++) {
+          formData.append("gallery[]", gallery[i]);
+        }
+      }
+
 
       try {
         const response = await axios.post(
@@ -173,6 +192,16 @@ export default function Page() {
                 onChange={setNamalengkap}
               />
 
+              <FieldDetail
+                usefor="lengkap"
+                label="Tanggal Lahir"
+                desc=""
+                type="date"
+                value={tglLahir}
+                onChange={setTglLahir}
+              />
+
+
 
               <div>
                 <input
@@ -221,6 +250,67 @@ export default function Page() {
                   ""
                 )}
               </div>
+
+              <div>
+              <input
+                type="checkbox"
+                name="galeri"
+                id="galeri"
+                className="peer/galeri"
+                onChange={(event) => {
+                  setGalleryView([]);
+                  setGallery([]);
+                  setCheckedGallery(!isCheckedGallery);
+                }}
+              />
+              <label
+                htmlFor="galeri"
+                className="font-bold text-left text-xs ml-3"
+              >
+                Upload Foto Gallery
+              </label>
+              <p className="text-gray text-[0.6rem] mb-2 ">
+                  Foto Gallery
+                </p>
+              <br />
+              <br />
+              <input
+                type="file"
+                name=""
+                id=""
+                className="text-xs peer-checked/galeri:block hidden"
+                multiple
+                onChange={(event) => {
+                  const files = Array.from(event.target.files);
+                  setGalleryView(files);
+                  return setGallery(files);
+                }}
+              />
+              {galleryView.length > 0 ? (
+                <div className="mt-10 border border-gold border-dotted px-6 py-4 rounded-lg ">
+                  <label
+                    htmlFor="pesan"
+                    className="font-bold text-left text-xs"
+                  >
+                    Image Preview
+                  </label>
+
+                  <div className="grid grid-cols-6 gap-6">
+                    {galleryView.map((file, index) => (
+                      <img
+                        key={index}
+                        src={URL.createObjectURL(file)}
+                        alt={`Preview ${index}`}
+                        width={200}
+                        height={200}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
             </div>
           </div>
 
@@ -238,6 +328,15 @@ export default function Page() {
                 type="text"
                 value={alamat}
                 onChange={setAlamat}
+              />
+              <FieldDetail
+                usefor="alamat"
+                label="Link Google Maps"
+                desc=""
+                placeholder="Link Google Maps"
+                type="text"
+                value={maps}
+                onChange={setMaps}
               />
 
               <FieldDetail
@@ -262,9 +361,9 @@ export default function Page() {
 
       <FieldDetail
                 usefor="keterangan"
-                label="Ketarangan Acara"
+                label="Keterangan Acara"
                 desc=""
-                placeholder="Katerangan Acara"
+                placeholder="Keterangan Acara"
                 type="text"
                 value={ketAcara}
                 onChange={setKetAcara}
