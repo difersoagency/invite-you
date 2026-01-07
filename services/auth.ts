@@ -7,7 +7,7 @@ import callApi from "../config/api";
 
 export async function setLogin(data: LoginTypes){
     return callApi({
-        url: '/api/login', // ⬅️ PROXY
+        url: 'https://invitation.inviteyouinvitation.com/api/login', 
         method: 'POST',
         data
     });

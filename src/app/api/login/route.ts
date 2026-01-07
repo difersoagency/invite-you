@@ -1,15 +1,15 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
     const response = await fetch(
-      'https://invitation.inviteyouinvitation.com/api/login',
+      "https://invitation.inviteyouinvitation.com/api/login",
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
       }
@@ -21,8 +21,9 @@ export async function POST(request: Request) {
       status: response.status,
     });
   } catch (error) {
+    console.error("LOGIN PROXY ERROR:", error);
     return NextResponse.json(
-      { message: 'Proxy login error' },
+      { message: "Proxy login error" },
       { status: 500 }
     );
   }
