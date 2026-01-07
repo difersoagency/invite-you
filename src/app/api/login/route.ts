@@ -20,11 +20,13 @@ export async function POST(request: Request) {
     return NextResponse.json(data, {
       status: response.status,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("LOGIN PROXY ERROR:", error);
-    return NextResponse.json(
-      { message: "Proxy login error" },
-      { status: 500 }
-    );
-  }
+    if (error.response) {
+        console.error("Laravel response status:", error.response.status);
+        console.error("Laravel response data:", await error.response.text());
+    }
+    return NextResponse.json({ message: "Proxy login error", details: error.message }, { status: 500 });
+}
+
 }
