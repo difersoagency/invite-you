@@ -6,10 +6,8 @@ import Cookies from 'js-cookie';
 import callApi from "../config/api";
 
 export async function setLogin(data: LoginTypes){
-    const url = `${ROOT_API}/login`;
-   
     return callApi({
-        url,
+        url: '/api/login', // ⬅️ PROXY
         method: 'POST',
         data
     });
