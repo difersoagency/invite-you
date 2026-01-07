@@ -10,23 +10,29 @@ export async function POST(request: Request) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json"
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(body)
       }
     );
 
-    const data = await response.json();
+    const text = await response.text(); // parse dulu text
+    try {
+      const data = JSON.parse(text); // baru parse JSON
+      return NextResponse.json(data, { status: response.status });
+    } catch {
+      console.error("Laravel returned invalid JSON:", text);
+      return NextResponse.json(
+        { message: "Laravel API did not return JSON", details: text },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json(data, {
-      status: response.status,
-    });
   } catch (error: any) {
     console.error("LOGIN PROXY ERROR:", error);
-    if (error.response) {
-        console.error("Laravel response status:", error.response.status);
-        console.error("Laravel response data:", await error.response.text());
-    }
-    return NextResponse.json({ message: "Proxy login error", details: error.message }, { status: 500 });
-}
-
+    return NextResponse.json(
+      { message: "Proxy login error", details: error.message },
+      { status: 500 }
+    );
+  }
 }
