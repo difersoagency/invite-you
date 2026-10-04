@@ -16,7 +16,7 @@ export default function FieldDetail(props:any) {
   }
 
   return (
-    <div className={props.className}>
+    <div className={`min-w-0 ${props.className || ''}`}>
       <label htmlFor={props.usefor} className='label'>{props.label}</label>
       {props.desc && <p className='hint mb-2'>{props.desc}</p>}
       <input type={props.type} name={props.usefor} id={props.usefor} placeholder={props.placeholder} className='input-base' value={value || ''} onChange={handleChange} />

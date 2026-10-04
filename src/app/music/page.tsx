@@ -111,7 +111,7 @@ export default  function Music() {
     setDeleting(false);
   }
 
-  const actionBtn = "inline-flex h-8 w-8 items-center justify-center rounded-md text-base text-ink/45 transition-colors hover:bg-ivory hover:text-ink";
+  const actionBtn = "inline-flex h-9 w-9 sm:h-8 sm:w-8 items-center justify-center rounded-md text-base text-ink/45 transition-colors hover:bg-ivory hover:text-ink";
 
   const actions = (id: string) => (
     <div className="flex shrink-0 items-center gap-0.5">
@@ -170,9 +170,9 @@ export default  function Music() {
       <AppShell>
         <PageHeader title="Musik" description="Lagu latar yang bisa dipilih saat membuat undangan." />
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_20rem]">
           {/* List */}
-          <div className="order-2 lg:order-1">
+          <div className="order-2 min-w-0 xl:order-1">
             <div className="mb-3 flex items-baseline justify-between">
               <h2 className="text-[15px] font-semibold">Daftar lagu</h2>
               {!loading && <span className="text-xs text-ink/45">{musicList.length} lagu</span>}
@@ -198,7 +198,7 @@ export default  function Music() {
           </div>
 
           {/* Upload */}
-          <section className="order-1 h-fit lg:order-2 lg:sticky lg:top-24">
+          <section className="order-1 h-fit min-w-0 xl:order-2 xl:sticky xl:top-10">
             <h2 className="mb-3 text-[15px] font-semibold">Tambah lagu</h2>
             <div className="card p-4">
               <label

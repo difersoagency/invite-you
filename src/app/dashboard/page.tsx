@@ -126,7 +126,7 @@ export default  function Dashboard() {
     ];
   }, [projectList]);
 
-  const actionBtn = "inline-flex h-8 w-8 items-center justify-center rounded-md text-base text-ink/45 transition-colors hover:bg-ivory hover:text-ink";
+  const actionBtn = "inline-flex h-9 w-9 sm:h-8 sm:w-8 items-center justify-center rounded-md text-base text-ink/45 transition-colors hover:bg-ivory hover:text-ink";
 
   const actions = (user: User, id: string) => (
     <div className="flex items-center justify-end gap-0.5">
@@ -234,26 +234,26 @@ export default  function Dashboard() {
           </div>
         ) : (<>
         {/* Desktop */}
-        <div className="card hidden overflow-hidden md:block">
-          <table className="w-full text-left text-sm">
+        <div className="card hidden overflow-x-auto md:block">
+          <table className="w-full table-fixed text-left text-sm">
             <thead>
               <tr className="border-b border-line text-xs text-ink/45">
-                <th className="px-5 py-3 font-medium">Klien</th>
+                <th className="w-[38%] px-5 py-3 font-medium">Klien</th>
                 <th className="px-5 py-3 font-medium">Acara</th>
-                <th className="hidden px-5 py-3 font-medium lg:table-cell">Template</th>
-                <th className="px-5 py-3 font-medium">Status</th>
-                <th className="px-5 py-3"><span className="sr-only">Aksi</span></th>
+                <th className="hidden px-5 py-3 font-medium xl:table-cell">Template</th>
+                <th className="w-24 px-5 py-3 font-medium">Status</th>
+                <th className="w-[8.5rem] px-5 py-3"><span className="sr-only">Aksi</span></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
               {filtered.map((item: any) => (
                 <tr key={item.id} className="transition-colors hover:bg-ivory/60">
                   <td className="px-5 py-3.5">
-                    <p className="font-medium capitalize">{item.name}</p>
-                    <p className="text-xs text-ink/45">{item.email}</p>
+                    <p className="truncate font-medium capitalize" title={item.name}>{item.name}</p>
+                    <p className="truncate text-xs text-ink/45" title={item.email}>{item.email}</p>
                   </td>
-                  <td className="px-5 py-3.5"><span className="capitalize">{item.acara}</span><span className="block text-xs text-ink/45 lg:hidden">{item.template}</span></td>
-                  <td className="hidden px-5 py-3.5 text-ink/60 lg:table-cell">{item.template}</td>
+                  <td className="min-w-0 px-5 py-3.5"><span className="capitalize">{item.acara}</span><span className="block truncate text-xs text-ink/45 xl:hidden">{item.template}</span></td>
+                  <td className="hidden truncate px-5 py-3.5 text-ink/60 xl:table-cell">{item.template}</td>
                   <td className="px-5 py-3.5">{status(item.status)}</td>
                   <td className="px-3 py-3.5">{actions(item, item.id)}</td>
                 </tr>
@@ -274,7 +274,7 @@ export default  function Dashboard() {
                 {status(item.status)}
               </div>
               <div className="mt-2 flex items-center justify-between">
-                <p className="text-xs text-ink/60"><span className="capitalize">{item.acara}</span> · {item.template}</p>
+                <p className="min-w-0 truncate text-xs text-ink/60"><span className="capitalize">{item.acara}</span> · {item.template}</p>
                 {actions(item, item.id)}
               </div>
             </li>

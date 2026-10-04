@@ -63,7 +63,7 @@ export default function HeadDashboard() {
       </aside>
 
       {/* Bar atas (HP & tablet) */}
-      <header className='sticky top-0 z-40 flex h-14 items-center justify-between bg-ink px-4 text-white sm:px-6 lg:hidden'>
+      <header className='sticky top-0 z-40 [@media(max-height:500px)_and_(max-width:1023px)]:static flex h-14 items-center justify-between bg-ink px-4 text-white sm:px-6 lg:hidden'>
         <Link href="/dashboard">
           <Image src="/logo.png" width={500} height={142} alt='Logo Invite You Invitation' className='h-7 w-auto brightness-0 invert' priority />
         </Link>
@@ -73,7 +73,7 @@ export default function HeadDashboard() {
       </header>
 
       {/* Menu bawah (HP & tablet) */}
-      <nav className='fixed inset-x-0 bottom-0 z-40 grid h-[calc(4rem+env(safe-area-inset-bottom))] grid-cols-3 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:hidden'>
+      <nav className='fixed inset-x-0 bottom-0 z-40 grid h-[calc(4rem+env(safe-area-inset-bottom))] [@media(max-height:500px)_and_(max-width:1023px)]:h-12 grid-cols-3 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:hidden'>
         {MENU.map(({ href, label, short, icon: Icon }) => {
           const active = isActive(href);
           return (
@@ -84,7 +84,7 @@ export default function HeadDashboard() {
             >
               {active && <span className='absolute top-0 h-0.5 w-8 bg-gold' />}
               <Icon className='h-5 w-5' />
-              {short || label}
+              <span className='[@media(max-height:500px)_and_(max-width:1023px)]:sr-only'>{short || label}</span>
             </Link>
           );
         })}
