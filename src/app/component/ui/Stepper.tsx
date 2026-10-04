@@ -1,39 +1,19 @@
 import React from "react";
-import { CheckIcon } from "../icon/Icons";
 
-const STEPS = ["Data Klien", "Template", "Detail Acara"];
+const STEPS = ["Data klien", "Template", "Detail acara"];
 
 export default function Stepper({ current }: { current: number }) {
   return (
-    <ol className="mb-8 flex items-center gap-2 sm:gap-4">
+    <ol className="mb-8 grid grid-cols-3 gap-2 sm:gap-4">
       {STEPS.map((label, i) => {
-        const done = i < current;
-        const active = i === current;
+        const reached = i <= current;
         return (
-          <li key={label} className="flex flex-1 items-center gap-2 sm:gap-3 last:flex-none">
-            <div className="flex items-center gap-2">
-              <span
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold transition ${
-                  done
-                    ? "bg-gold text-white"
-                    : active
-                    ? "bg-dark text-white ring-4 ring-gold/25"
-                    : "border border-gold-200 bg-white text-dark/40"
-                }`}
-              >
-                {done ? <CheckIcon className="h-4 w-4" /> : i + 1}
-              </span>
-              <span
-                className={`hidden text-sm sm:inline ${
-                  active ? "font-semibold text-dark" : "text-dark/50"
-                }`}
-              >
-                {label}
-              </span>
-            </div>
-            {i < STEPS.length - 1 && (
-              <span className={`h-px flex-1 ${done ? "bg-gold" : "bg-gold-200"}`} />
-            )}
+          <li key={label}>
+            <div className={`h-0.5 ${i < current ? "bg-ink" : i === current ? "bg-gold" : "bg-line"}`} />
+            <p className={`mt-2 text-xs sm:text-sm ${reached ? "text-ink" : "text-ink/35"}`}>
+              <span className="tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+              <span className={`ml-2 ${i === current ? "inline" : "hidden sm:inline"}`}>{label}</span>
+            </p>
           </li>
         );
       })}

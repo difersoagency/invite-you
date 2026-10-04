@@ -2,12 +2,12 @@
 
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState, } from 'react'
 import { motion } from 'framer-motion'
-import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, ChipProps, Tooltip, Chip, Button, Spinner, } from '@nextui-org/react'
+import { Button, Spinner, } from '@nextui-org/react'
 import {EyeIcon} from './../component/icon/EyeIcon'
 import {DeleteIcon} from './../component/icon/DeleteIcon'
 import {EditIcon} from './../component/icon/EditIcon'
-import { CakeIcon, EnvelopeIcon, HeartIcon, PlusIcon, RingIcon, SearchIcon } from '../component/icon/Icons'
-import {head, users} from './../data/data'
+import { PlusIcon, SearchIcon } from '../component/icon/Icons'
+import {users} from './../data/data'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import { deleteProject, getProjectList } from '../../../services/manage'
@@ -26,15 +26,16 @@ const fadeUp = {
 
 type User = typeof users[0] & { link?: string };
 
-const statusColorMap: Record<string, ChipProps["color"]> ={
-  soon : "warning",
-  finished : "success",
+const STATUS_LABEL: Record<string, string> = {
+  soon: 'Segera',
+  finished: 'Aktif',
 }
 
 export default  function Dashboard() {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [projectList, setProjectlist] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [search, setSearch] = useState('');
   const [idHapus, setIdHapus] = useState('');
@@ -51,13 +52,21 @@ export default  function Dashboard() {
   }, []);
 
   const getProjectListAPI = useCallback( async () =>{
-    const data = await getProjectList()
-    setProjectlist(data.data || [])
-    setLoading(false)
-
-    if(data.status > 300 ){
-      toast.error(data.message)
+    setLoading(true)
+    setLoadError(false)
+    try {
+      const data = await getProjectList()
+      setProjectlist(data.data || [])
+      // 5xx = backend crashed; show a friendly retry state instead of the raw PHP message
+      if (data.status >= 500) {
+        setLoadError(true)
+      } else if (data.status > 300) {
+        toast.error(data.message)
+      }
+    } catch {
+      setLoadError(true)
     }
+    setLoading(false)
   },[])
 
   useEffect(()=>{
@@ -110,88 +119,55 @@ export default  function Dashboard() {
   const stats = useMemo(() => {
     const count = (acara: string) => projectList.filter((p: any) => String(p.acara).toLowerCase() === acara).length;
     return [
-      { label: 'Total Undangan', value: projectList.length, icon: EnvelopeIcon },
-      { label: 'Wedding', value: count('wedding'), icon: HeartIcon },
-      { label: 'Engagement', value: count('engagement'), icon: RingIcon },
-      { label: 'Birthday', value: count('birthday'), icon: CakeIcon },
+      { label: 'Total undangan', value: projectList.length },
+      { label: 'Wedding', value: count('wedding') },
+      { label: 'Engagement', value: count('engagement') },
+      { label: 'Birthday', value: count('birthday') },
     ];
   }, [projectList]);
 
+  const actionBtn = "inline-flex h-8 w-8 items-center justify-center rounded-md text-base text-ink/45 transition-colors hover:bg-ivory hover:text-ink";
+
   const actions = (user: User, id: string) => (
-    <div className="flex items-center gap-1">
-      <Tooltip content="Lihat Undangan">
-        <button type="button" aria-label="Lihat undangan" onClick={() => openNewTab(user.link as string)} className="flex h-9 w-9 items-center justify-center rounded-lg text-lg text-default-500 hover:bg-gold-50 hover:text-dark">
-          <EyeIcon />
-        </button>
-      </Tooltip>
-      <Tooltip content="Edit">
-        <Link href={`/create/${id}`} aria-label="Edit undangan" className="flex h-9 w-9 items-center justify-center rounded-lg text-lg text-default-500 hover:bg-gold-50 hover:text-dark">
-          <EditIcon />
-        </Link>
-      </Tooltip>
-      <Tooltip color="danger" content="Hapus">
-        <button type='button' aria-label="Hapus undangan" onClick={() => openModalWithID(id)} className="flex h-9 w-9 items-center justify-center rounded-lg text-lg text-danger hover:bg-red-50">
-          <DeleteIcon />
-        </button>
-      </Tooltip>
+    <div className="flex items-center justify-end gap-0.5">
+      <button type="button" title="Lihat undangan" aria-label="Lihat undangan" onClick={() => openNewTab(user.link as string)} className={actionBtn}>
+        <EyeIcon />
+      </button>
+      <Link href={`/create/${id}`} title="Edit" aria-label="Edit undangan" className={actionBtn}>
+        <EditIcon />
+      </Link>
+      <button type='button' title="Hapus" aria-label="Hapus undangan" onClick={() => openModalWithID(id)} className={`${actionBtn} hover:!text-red-600`}>
+        <DeleteIcon />
+      </button>
     </div>
   );
 
-  const renderCell = (user: User, columnKey: React.Key,  id: string) => {
-    const cellValue = user[columnKey as keyof User];
+  const status = (s: string) => (
+    <span className="inline-flex items-center gap-1.5 text-xs text-ink/60">
+      <span className={`h-1.5 w-1.5 rounded-full ${s === 'soon' ? 'bg-gold' : 'bg-emerald-600'}`} />
+      {STATUS_LABEL[s] || s}
+    </span>
+  );
 
-    switch (columnKey) {
-      case "name":
-        return (
-          <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-50 text-sm font-semibold uppercase text-gold-600">
-              {String(cellValue ?? '?').charAt(0)}
-            </span>
-            <div className="flex flex-col">
-              <p className="text-sm font-semibold capitalize">{cellValue}</p>
-              <p className="text-xs text-dark/50">{user.email}</p>
-            </div>
-          </div>
-        );
-      case "acara":
-        return (
-          <div className="flex flex-col">
-            <p className="text-sm font-medium capitalize">{cellValue}</p>
-            <p className="text-xs text-gold-500 capitalize">{user.template}</p>
-          </div>
-        );
-      case "status":
-        return (
-          <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return actions(user, id);
-      default:
-        return cellValue;
-    }
-  };
-
-  const emptyText = search ? 'Tidak ada klien yang cocok dengan pencarian.' : 'Belum ada undangan. Mulai buat undangan pertama Anda.';
+  const emptyText = search ? 'Tidak ada klien yang cocok.' : 'Belum ada undangan.';
 
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur' placement='center'>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement='center' radius='sm'>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Hapus undangan?</ModalHeader>
+              <ModalHeader className="font-display text-xl">Hapus undangan ini?</ModalHeader>
               <ModalBody>
-                <p className='text-sm text-dark/70'>
-                  Undangan ini akan dihapus secara permanen dan tidak bisa dikembalikan.
+                <p className='text-sm text-ink/60'>
+                  Data dan link undangan akan hilang permanen.
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button variant="light" onPress={onClose}>
+                <Button variant="light" radius='sm' onPress={onClose}>
                   Batal
                 </Button>
-                <Button color="danger" isLoading={deleting} onPress={hapusHandler}>
+                <Button color="danger" radius='sm' isLoading={deleting} onPress={hapusHandler}>
                   Hapus
                 </Button>
               </ModalFooter>
@@ -205,95 +181,107 @@ export default  function Dashboard() {
         <motion.div
           initial="hidden"
           animate="show"
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: fromLogin ? 0.35 : 0 } } }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07, delayChildren: fromLogin ? 0.45 : 0 } } }}
         >
         <motion.div variants={fadeUp}>
         <PageHeader
-          eyebrow="Dashboard"
-          title="Daftar Klien"
-          description="Kelola semua undangan digital klien Anda."
+          title="Klien"
+          description="Semua undangan yang sudah dibuat."
           actions={
             <Link href="/create" className="btn-primary w-full sm:w-auto">
-              <PlusIcon /> Buat Undangan
+              <PlusIcon /> Buat undangan
             </Link>
           }
         />
         </motion.div>
 
-        <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {stats.map(({ label, value, icon: Icon }) => (
-            <motion.div variants={fadeUp} key={label} className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold-50 text-xl text-gold-500">
-                <Icon />
-              </span>
-              <div>
-                <p className="text-2xl font-semibold leading-none">{loading ? '–' : value}</p>
-                <p className="mt-1 text-xs text-dark/55">{label}</p>
-              </div>
-            </motion.div>
+        <motion.dl variants={fadeUp} className="mb-10 grid grid-cols-2 gap-y-6 sm:grid-cols-4">
+          {stats.map(({ label, value }, i) => (
+            <div key={label} className={i === 0 ? '' : i % 2 ? 'border-l border-line pl-5' : 'sm:border-l sm:border-line sm:pl-5'}>
+              <dt className="text-xs text-ink/50">{label}</dt>
+              <dd className="mt-1 font-display text-4xl font-semibold tabular-nums">{loading ? '–' : value}</dd>
+            </div>
           ))}
-        </div>
+        </motion.dl>
 
         <motion.div variants={fadeUp}>
-        <div className="relative mb-4 sm:max-w-sm">
-          <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-dark/40" />
+        <div className="relative mb-4 sm:max-w-xs">
+          <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35" />
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari nama, email, atau acara..."
-            className="input-base pl-10"
+            placeholder="Cari nama, email, acara"
+            className="input-base pl-9"
           />
         </div>
 
-        {/* Desktop table */}
-        <div className="hidden md:block">
-          <Table
-            aria-label="Daftar klien"
-            classNames={{ wrapper: 'card p-2 shadow-soft', th: 'bg-gold-50 text-dark/70 text-xs uppercase tracking-wide' }}
-          >
-            <TableHeader columns={head}>
-              {(column: any) => (
-                <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
-                  {column.name}
-                </TableColumn>
-              )}
-            </TableHeader>
-            <TableBody items={filtered} isLoading={loading} loadingContent={<Spinner color="warning" />} emptyContent={loading ? ' ' : emptyText}>
-              {(item: any) => (
-                <TableRow key={item.id}>
-                  {(columnKey) => <TableCell>{renderCell(item, columnKey,item.id)}</TableCell>}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+        {loadError ? (
+          <div className="card px-6 py-14 text-center">
+            <p className="font-semibold">Daftar klien gagal dimuat</p>
+            <p className="mx-auto mt-1 max-w-sm text-sm text-ink/55">Server sedang bermasalah. Coba lagi sebentar lagi, atau hubungi admin backend.</p>
+            <button type="button" className="btn-outline mt-5" onClick={getProjectListAPI}>Coba lagi</button>
+          </div>
+        ) : loading ? (
+          <div className="card flex justify-center py-16"><Spinner color="default" size="sm" /></div>
+        ) : filtered.length === 0 ? (
+          <div className="card px-6 py-14 text-center text-sm text-ink/55">
+            {emptyText}
+            {!search && <div className="mt-4"><Link href="/create" className="btn-outline">Buat undangan pertama</Link></div>}
+          </div>
+        ) : (<>
+        {/* Desktop */}
+        <div className="card hidden overflow-hidden md:block">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-line text-xs text-ink/45">
+                <th className="px-5 py-3 font-medium">Klien</th>
+                <th className="px-5 py-3 font-medium">Acara</th>
+                <th className="px-5 py-3 font-medium">Template</th>
+                <th className="px-5 py-3 font-medium">Status</th>
+                <th className="px-5 py-3"><span className="sr-only">Aksi</span></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-line">
+              {filtered.map((item: any) => (
+                <tr key={item.id} className="transition-colors hover:bg-ivory/60">
+                  <td className="px-5 py-3.5">
+                    <p className="font-medium capitalize">{item.name}</p>
+                    <p className="text-xs text-ink/45">{item.email}</p>
+                  </td>
+                  <td className="px-5 py-3.5 capitalize">{item.acara}</td>
+                  <td className="px-5 py-3.5 text-ink/60">{item.template}</td>
+                  <td className="px-5 py-3.5">{status(item.status)}</td>
+                  <td className="px-3 py-3.5">{actions(item, item.id)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        {/* Mobile cards */}
-        <div className="flex flex-col gap-3 md:hidden">
-          {loading ? (
-            <div className="card flex justify-center p-10"><Spinner color="warning" /></div>
-          ) : filtered.length === 0 ? (
-            <div className="card p-8 text-center text-sm text-dark/55">{emptyText}</div>
-          ) : (
-            filtered.map((item: any) => (
-              <div key={item.id} className="card p-4">
-                <div className="flex items-start justify-between gap-3">
-                  {renderCell(item, 'name', item.id)}
-                  {renderCell(item, 'status', item.id)}
+        {/* Mobile */}
+        <ul className="card divide-y divide-line md:hidden">
+          {filtered.map((item: any) => (
+            <li key={item.id} className="px-4 py-3.5">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium capitalize">{item.name}</p>
+                  <p className="truncate text-xs text-ink/45">{item.email}</p>
                 </div>
-                <div className="mt-3 flex items-center justify-between border-t border-gold-100 pt-3">
-                  {renderCell(item, 'acara', item.id)}
-                  {actions(item, item.id)}
-                </div>
+                {status(item.status)}
               </div>
-            ))
-          )}
-        </div>
+              <div className="mt-2 flex items-center justify-between">
+                <p className="text-xs text-ink/60"><span className="capitalize">{item.acara}</span> · {item.template}</p>
+                {actions(item, item.id)}
+              </div>
+            </li>
+          ))}
+        </ul>
+        </>)}
         </motion.div>
         </motion.div>
       </AppShell>
-      <ToastContainer position="top-center"></ToastContainer>
+      <ToastContainer position="top-center" hideProgressBar></ToastContainer>
     </>
   )
 }

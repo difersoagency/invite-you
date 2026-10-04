@@ -72,27 +72,27 @@ export default function Create({params}:{ params: {id:string}}) {
     <>
     <AppShell>
       <Stepper current={0} />
-      <PageHeader eyebrow="Edit Undangan · Langkah 1 dari 3" title="Data Klien" description="Perbarui data customer. Semua kolom wajib diisi." />
+      <PageHeader eyebrow="Edit undangan" title="Data klien" description="Semua kolom wajib diisi." />
 
       <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="grid gap-6 lg:grid-cols-2">
-        <SectionCard title="Informasi Klien" description="Digunakan untuk identitas pemilik undangan." icon={<UserIcon />}>
+        <SectionCard title="Informasi Klien" icon={<UserIcon />}>
           <FieldCreate type="text" usefor='namaKlien' value={namaKlien} onChange={setNamaklien} label='Nama Klien' placeholder='Nama lengkap klien'/>
           <FieldCreate type="email" usefor='emailKlien' label='Email Klien' value={emailKlien} onChange={setEmailklien} placeholder='klien@email.com'/>
         </SectionCard>
 
-        <SectionCard title="Jenis Acara" description="Jenis acara tidak dapat diubah saat edit." icon={<CalendarIcon />}>
+        <SectionCard title="Jenis Acara" description="Tidak bisa diubah saat edit" icon={<CalendarIcon />}>
           {acara ? (
             <EventTypePicker value={acara} onChange={setAcara} only={acara} />
           ) : (
-            <div className="h-20 animate-pulse rounded-2xl bg-gold-50" />
+            <div className="h-16 animate-pulse rounded-md bg-line/60" />
           )}
         </SectionCard>
         <button type="submit" className="hidden" aria-hidden tabIndex={-1} />
       </form>
 
-      <FormActions onSubmit={onSubmit} submitLabel="Lanjut pilih template" />
+      <FormActions onSubmit={onSubmit} submitLabel="Lanjut" />
     </AppShell>
-     <ToastContainer position="top-center"></ToastContainer>
+     <ToastContainer position="top-center" hideProgressBar></ToastContainer>
      </>
   )
 }

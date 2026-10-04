@@ -51,23 +51,23 @@ export default function Create() {
     <>
     <AppShell>
       <Stepper current={0} />
-      <PageHeader eyebrow="Langkah 1 dari 3" title="Data Klien" description="Masukkan data customer. Semua kolom wajib diisi." />
+      <PageHeader eyebrow="Undangan baru" title="Data klien" description="Semua kolom wajib diisi." />
 
       <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="grid gap-6 lg:grid-cols-2">
-        <SectionCard title="Informasi Klien" description="Digunakan untuk identitas pemilik undangan." icon={<UserIcon />}>
+        <SectionCard title="Informasi Klien" icon={<UserIcon />}>
           <FieldCreate type="text" usefor='namaKlien' value={namaKlien} onChange={setNamaklien} label='Nama Klien' placeholder='Nama lengkap klien'/>
           <FieldCreate type="email" usefor='emailKlien' label='Email Klien' value={emailKlien} onChange={setEmailklien} placeholder='klien@email.com'/>
         </SectionCard>
 
-        <SectionCard title="Jenis Acara" description="Pilih kebutuhan acara klien." icon={<CalendarIcon />}>
+        <SectionCard title="Jenis Acara" icon={<CalendarIcon />}>
           <EventTypePicker value={acara} onChange={setAcara} />
         </SectionCard>
         <button type="submit" className="hidden" aria-hidden tabIndex={-1} />
       </form>
 
-      <FormActions onSubmit={onSubmit} submitLabel="Lanjut pilih template" showBack={false} />
+      <FormActions onSubmit={onSubmit} submitLabel="Lanjut" showBack={false} />
     </AppShell>
-     <ToastContainer position="top-center"></ToastContainer>
+     <ToastContainer position="top-center" hideProgressBar></ToastContainer>
      </>
   )
 }

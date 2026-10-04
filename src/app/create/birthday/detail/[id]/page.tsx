@@ -76,7 +76,7 @@ export default function Page({params} : {params : {id:string}}) {
     setFoto(data.data.foto)
     setFotoView(data.data.fotoView)
     setAlamat(data.data.alamat)
-    setMaps(data.data.maps)
+    setMaps(data.data.maps || "")
     setTgl(data.data.tgl)
     setWaktu(data.data.waktu)
     setNoWa(data.data.noWa)
@@ -188,23 +188,23 @@ export default function Page({params} : {params : {id:string}}) {
       <AppShell>
         <Stepper current={2} />
         <PageHeader
-          eyebrow="Edit Undangan · Langkah 3 dari 3 · Birthday"
-          title="Detail Acara"
-          description="Lengkapi informasi undangan ulang tahun. Bagian opsional bisa diaktifkan lewat tombol di kanan."
+          eyebrow="Edit undangan · Birthday"
+          title="Detail acara"
+          description="Bagian dengan tombol di kanan boleh dilewati."
         />
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <SectionCard title="Yang Berulang Tahun" description="Data diri orang yang berulang tahun." icon={<CakeIcon />}>
+          <SectionCard title="Yang Berulang Tahun" icon={<CakeIcon />}>
             <div className="grid gap-5 sm:grid-cols-2">
               <FieldDetail usefor="nama" label="Nama Panggilan" placeholder="Nama panggilan" type="text" value={nama} onChange={setNama} />
               <FieldDetail usefor="nama-lengkap" label="Nama Lengkap" placeholder="Nama lengkap" type="text" value={namaLengkap} onChange={setNamalengkap} />
             </div>
             <FieldDetail usefor="tgl-lahir" label="Tanggal Lahir" type="date" value={tglLahir} onChange={setTglLahir} />
-            <div className="rounded-xl border border-gold-100 bg-ivory p-4">
+            <div className="rounded-md border border-line p-4">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-medium">Foto</p>
-                  <p className="text-xs text-dark/55">Opsional, tampilkan foto yang berulang tahun.</p>
+                  <p className="hint">Opsional, tampilkan foto yang berulang tahun.</p>
                 </div>
                 <Toggle
                   id="fotop"
@@ -231,7 +231,7 @@ export default function Page({params} : {params : {id:string}}) {
             </div>
           </SectionCard>
 
-          <SectionCard title="Data Acara" description="Waktu, lokasi, dan keterangan acara." icon={<CalendarIcon />}>
+          <SectionCard title="Data Acara" icon={<CalendarIcon />}>
             <FieldDetail usefor="alamat" label="Lokasi Acara" placeholder="Alamat lengkap lokasi" type="text" value={alamat} onChange={setAlamat} />
             <FieldDetail usefor="maps" label="Link Google Maps" placeholder="https://goo.gl/maps/xxxxxxxxxxx" type="url" value={maps} onChange={setMaps} />
             <div className="grid gap-5 sm:grid-cols-2">
@@ -241,12 +241,13 @@ export default function Page({params} : {params : {id:string}}) {
             <FieldDetail usefor="ket-acara" label="Keterangan Acara" placeholder="Contoh: Dresscode serba putih" type="text" value={ketAcara} onChange={setKetAcara} />
           </SectionCard>
 
-          <SectionCard title="Musik" description="Musik latar undangan." icon={<MusicIcon />} className="lg:col-span-2">
+          <SectionCard title="Musik" icon={<MusicIcon />} className="lg:col-span-2">
             <Select
               label="Musik"
               labelPlacement="outside"
               placeholder="Pilih musik latar"
               variant="bordered"
+              radius="sm"
               className="md:max-w-md"
               selectionMode="single"
               selectedKeys={defaultMusik}
@@ -262,7 +263,7 @@ export default function Page({params} : {params : {id:string}}) {
 
           <SectionCard
             title="Galeri Foto"
-            description="Opsional, kumpulan foto momen spesial."
+            description="Opsional"
             icon={<ImageIcon />}
             className="lg:col-span-2"
             toggle={{
@@ -290,7 +291,7 @@ export default function Page({params} : {params : {id:string}}) {
 
           <SectionCard
             title="RSVP via WhatsApp"
-            description="Opsional, tamu konfirmasi kehadiran lewat WhatsApp."
+            description="Opsional, tamu konfirmasi lewat WhatsApp"
             icon={<ChatIcon />}
             className="lg:col-span-2"
             toggle={{
@@ -317,7 +318,7 @@ export default function Page({params} : {params : {id:string}}) {
           submitLabel="Simpan Perubahan"
         />
       </AppShell>
-      <ToastContainer position="top-center"></ToastContainer>
+      <ToastContainer position="top-center" hideProgressBar></ToastContainer>
     </>
   );
 }

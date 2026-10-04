@@ -49,66 +49,61 @@ export default function Login(){
 
   return(
     <>
-    <main className="grid min-h-screen lg:grid-cols-2">
-      {/* Hero */}
-      <section className="relative hidden overflow-hidden bg-dark lg:block">
-        <Image src="/bg.png" alt="" fill priority className="object-cover opacity-60" sizes="50vw" />
-        <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/40 to-transparent" />
-        <div className="relative flex h-full flex-col justify-end p-12 text-white">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-gold-300">Invite You</p>
-          <h2 className="max-w-md font-display text-4xl font-semibold leading-tight text-balance">
-            Undangan digital yang elegan untuk momen berharga.
-          </h2>
-          <p className="mt-4 max-w-md text-sm text-white/70">
-            Kelola klien, template, dan musik undangan dalam satu dashboard.
-          </p>
+    <main className="grid min-h-screen lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+      {/* Panel kiri */}
+      <section className="relative hidden overflow-hidden bg-ink lg:block">
+        <Image src="/bg.png" alt="" fill priority className="object-cover opacity-45" sizes="42vw" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-transparent to-ink" />
+        <div className="relative flex h-full flex-col justify-between p-10 text-white">
+          <Image src="/logo.png" width={500} height={142} alt="Invite You" className="h-9 w-auto self-start brightness-0 invert" priority />
+          <div>
+            <div className="mb-5 h-px w-12 bg-gold" />
+            <p className="max-w-sm font-display text-3xl leading-snug">
+              Undangan digital untuk wedding, lamaran, dan ulang tahun.
+            </p>
+            <p className="mt-4 text-sm text-white/50">Panel admin Invite You Invitation</p>
+          </div>
         </div>
       </section>
 
       {/* Form */}
-      <section className="relative flex items-center justify-center px-5 py-12 sm:px-8">
-        <div className="pointer-events-none absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center opacity-[0.07] lg:hidden" />
-        <div className="relative w-full max-w-sm">
-          <Image
-            src="/logo.png"
-            width={500}
-            height={142}
-            alt="Logo Invite You"
-            className="mx-auto h-14 w-auto"
-            priority
-          />
-          <div className="mt-8 text-center">
-            <h1 className="font-display text-3xl font-semibold">Selamat datang</h1>
-            <p className="mt-2 text-sm text-dark/60">Masuk untuk mengelola undangan Anda.</p>
-          </div>
+      <section className="flex flex-col px-6 py-10 sm:px-10">
+        <Image src="/logo.png" width={500} height={142} alt="Invite You" className="h-9 w-auto self-start lg:hidden" priority />
 
-          <form onSubmit={loginHandler} className="card mt-8 flex flex-col gap-5 p-6 sm:p-8">
-            <FieldText usefor='email' label='Email' placeholder="nama@email.com" autoComplete="email" value={email} onChange={setEmail} type="email"/>
-            <FieldText
-              usefor='password'
-              label='Password'
-              placeholder="••••••••"
-              autoComplete="current-password"
-              value={password}
-              onChange={setPassword}
-              type={showPassword ? "text" : "password"}
-              trailing={
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-lg text-dark/50 hover:bg-gold-50 hover:text-dark"
-                >
-                  {showPassword ? <EyeOffIcon /> : <EyeOpenIcon />}
-                </button>
-              }
-            />
-            <button className="btn-primary mt-2 w-full py-3" type="submit">
-              Login
-            </button>
-          </form>
-          <p className="mt-6 text-center text-xs text-dark/40">© {new Date().getFullYear()} Invite You Invitation</p>
+        <div className="flex flex-1 items-center">
+          <div className="w-full max-w-sm lg:ml-[12%]">
+            <h1 className="font-display text-4xl font-semibold">Masuk</h1>
+            <p className="mt-2 text-sm text-ink/55">Gunakan email dan password akun admin.</p>
+
+            <form onSubmit={loginHandler} className="mt-10 flex flex-col gap-5">
+              <FieldText usefor='email' label='Email' placeholder="nama@email.com" autoComplete="email" value={email} onChange={setEmail} type="email"/>
+              <FieldText
+                usefor='password'
+                label='Password'
+                placeholder="Password"
+                autoComplete="current-password"
+                value={password}
+                onChange={setPassword}
+                type={showPassword ? "text" : "password"}
+                trailing={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                    className="flex h-9 w-9 items-center justify-center text-lg text-ink/40 hover:text-ink"
+                  >
+                    {showPassword ? <EyeOffIcon /> : <EyeOpenIcon />}
+                  </button>
+                }
+              />
+              <button className="btn-primary mt-3 w-full py-3" type="submit">
+                Masuk
+              </button>
+            </form>
+          </div>
         </div>
+
+        <p className="text-xs text-ink/35">© {new Date().getFullYear()} Invite You Invitation</p>
       </section>
     </main>
     {leaving && <LoginTransition mode="cover" onDone={() => router.replace('/dashboard')} />}

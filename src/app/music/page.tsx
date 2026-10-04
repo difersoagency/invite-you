@@ -1,10 +1,9 @@
 "use client"
 
 import React, { useCallback, useEffect, useRef, useState, } from 'react'
-import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, Tooltip, Button, Spinner, } from '@nextui-org/react'
+import { Button, Spinner, } from '@nextui-org/react'
 import {DeleteIcon} from './../component/icon/DeleteIcon'
-import { MusicIcon, PlayIcon, UploadIcon } from '../component/icon/Icons'
-import {songs} from './../data/data'
+import { PlayIcon, UploadIcon } from '../component/icon/Icons'
 import axios from 'axios'
 import { deleteMusic, getMusicList } from '../../../services/manage'
 import { ToastContainer, toast } from "react-toastify";
@@ -112,58 +111,34 @@ export default  function Music() {
     setDeleting(false);
   }
 
+  const actionBtn = "inline-flex h-8 w-8 items-center justify-center rounded-md text-base text-ink/45 transition-colors hover:bg-ivory hover:text-ink";
+
   const actions = (id: string) => (
-    <div className="flex items-center gap-1">
-      <Tooltip content="Putar">
-        <button type="button" aria-label="Putar lagu" className="flex h-9 w-9 items-center justify-center rounded-lg text-base text-gold-600 hover:bg-gold-50" onClick={()=> openPlayModalWithID(id)}>
-          <PlayIcon />
-        </button>
-      </Tooltip>
-      <Tooltip color="danger" content="Hapus Lagu">
-        <button type="button" aria-label="Hapus lagu" className="flex h-9 w-9 items-center justify-center rounded-lg text-lg text-danger hover:bg-red-50" onClick={() => openModalWithID(id)}>
-          <DeleteIcon />
-        </button>
-      </Tooltip>
+    <div className="flex shrink-0 items-center gap-0.5">
+      <button type="button" title="Putar" aria-label="Putar lagu" className={actionBtn} onClick={()=> openPlayModalWithID(id)}>
+        <PlayIcon className="h-3.5 w-3.5" />
+      </button>
+      <button type="button" title="Hapus" aria-label="Hapus lagu" className={`${actionBtn} hover:!text-red-600`} onClick={() => openModalWithID(id)}>
+        <DeleteIcon />
+      </button>
     </div>
   );
 
-  const renderCell = (song: any, columnKey: React.Key, id: string) => {
-    const cellValue = song[columnKey as string];
-
-    switch (columnKey) {
-      case "judul":
-        return (
-          <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold-50 text-gold-500">
-              <MusicIcon />
-            </span>
-            <p className="text-sm font-medium">{cellValue}</p>
-          </div>
-        );
-      case "kategori":
-        return <p className="text-sm capitalize text-dark/70">{cellValue}</p>;
-      case "menu":
-        return actions(id);
-      default:
-        return cellValue;
-    }
-  };
-
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur' placement='center'>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement='center' radius='sm'>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Hapus lagu?</ModalHeader>
+              <ModalHeader className="font-display text-xl">Hapus lagu ini?</ModalHeader>
               <ModalBody>
-                <p className='text-sm text-dark/70'>Lagu ini akan dihapus dari daftar musik.</p>
+                <p className='text-sm text-ink/60'>Lagu yang masih dipakai undangan tidak bisa dihapus.</p>
               </ModalBody>
               <ModalFooter>
-                <Button variant="light" onPress={onClose}>
+                <Button variant="light" radius='sm' onPress={onClose}>
                   Batal
                 </Button>
-                <Button color="danger" isLoading={deleting} onPress={hapusHandler}>
+                <Button color="danger" radius='sm' isLoading={deleting} onPress={hapusHandler}>
                   Hapus
                 </Button>
               </ModalFooter>
@@ -171,11 +146,11 @@ export default  function Music() {
           )}
         </ModalContent>
       </Modal>
-      <Modal isOpen={isPlayModalOpen} onOpenChange={setPlayModalOpen} backdrop='blur' placement='center'>
+      <Modal isOpen={isPlayModalOpen} onOpenChange={setPlayModalOpen} placement='center' radius='sm'>
         <ModalContent>
           {(closeModal) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Preview Musik</ModalHeader>
+              <ModalHeader className="font-display text-xl">Putar lagu</ModalHeader>
               <ModalBody>
                 <audio id="audio" controls autoPlay className='w-full'>
                   <source src={streamFile} id="src" type="audio/mpeg" />
@@ -183,7 +158,7 @@ export default  function Music() {
                 </audio>
               </ModalBody>
               <ModalFooter>
-                <Button variant="light" onPress={closeModal}>
+                <Button variant="light" radius='sm' onPress={closeModal}>
                   Tutup
                 </Button>
               </ModalFooter>
@@ -193,82 +168,65 @@ export default  function Music() {
       </Modal>
 
       <AppShell>
-        <PageHeader eyebrow="Library" title="List Musik" description="Musik latar yang bisa dipilih untuk undangan." />
+        <PageHeader title="Musik" description="Lagu latar yang bisa dipilih saat membuat undangan." />
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Upload */}
-          <section className="card h-fit p-5 sm:p-6 lg:sticky lg:top-24">
-            <h2 className="font-semibold">Upload Lagu Baru</h2>
-            <p className="mt-0.5 text-xs text-dark/55">Format .mp3</p>
-
-            <label
-              htmlFor="upload"
-              className="group mt-4 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gold-200 bg-gold-50/40 px-4 py-8 text-center transition hover:border-gold hover:bg-gold-50"
-            >
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-xl text-gold-500 shadow-sm transition group-hover:scale-105">
-                <UploadIcon />
-              </span>
-              <span className="max-w-full truncate text-sm font-medium">{fileName || 'Klik untuk pilih file'}</span>
-              <input type="file" accept=".mp3" id="upload" className='sr-only' onChange={handleFiles} />
-            </label>
-
-            {audioSrc && (
-              <audio controls className='mt-4 w-full' ref={audioRef} src={audioSrc}>
-                Your browser does not support the audio element.
-              </audio>
-            )}
-
-            <button className='btn-primary mt-4 w-full' disabled={uploading} onClick={onSubmit}>
-              {uploading && <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />}
-              {uploading ? 'Uploading...' : 'Upload Lagu'}
-            </button>
-          </section>
-
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
           {/* List */}
-          <div className="lg:col-span-2">
-            <div className="hidden sm:block">
-              <Table
-                aria-label="Daftar musik"
-                classNames={{ wrapper: 'card p-2 shadow-soft', th: 'bg-gold-50 text-dark/70 text-xs uppercase tracking-wide' }}
-              >
-                <TableHeader columns={songs}>
-                  {(column: any) => (
-                    <TableColumn key={column.uid} align={column.uid === "menu" ? "center" : "start"}>
-                      {column.name}
-                    </TableColumn>
-                  )}
-                </TableHeader>
-                <TableBody items={musicList} isLoading={loading} loadingContent={<Spinner color="warning" />} emptyContent={loading ? ' ' : 'Belum ada lagu.'}>
-                  {(item: any) => (
-                    <TableRow key={item.id}>
-                      {(columnKey) => <TableCell>{renderCell(item, columnKey,item.id)}</TableCell>}
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+          <div className="order-2 lg:order-1">
+            <div className="mb-3 flex items-baseline justify-between">
+              <h2 className="text-[15px] font-semibold">Daftar lagu</h2>
+              {!loading && <span className="text-xs text-ink/45">{musicList.length} lagu</span>}
             </div>
-
-            <div className="flex flex-col gap-3 sm:hidden">
-              {loading ? (
-                <div className="card flex justify-center p-10"><Spinner color="warning" /></div>
-              ) : musicList.length === 0 ? (
-                <div className="card p-8 text-center text-sm text-dark/55">Belum ada lagu.</div>
-              ) : (
-                musicList.map((item: any) => (
-                  <div key={item.id} className="card flex items-center justify-between gap-3 p-3">
-                    <div className="min-w-0">
-                      {renderCell(item, 'judul', item.id)}
-                      <p className="ml-12 text-xs capitalize text-dark/50">{item.kategori}</p>
+            {loading ? (
+              <div className="card flex justify-center py-16"><Spinner color="default" size="sm" /></div>
+            ) : musicList.length === 0 ? (
+              <div className="card px-6 py-14 text-center text-sm text-ink/55">Belum ada lagu.</div>
+            ) : (
+              <ol className="card divide-y divide-line">
+                {musicList.map((item: any, i: number) => (
+                  <li key={item.id} className="flex items-center gap-4 px-4 py-3 sm:px-5">
+                    <span className="w-6 shrink-0 text-xs tabular-nums text-ink/35">{String(i + 1).padStart(2, '0')}</span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{item.judul}</p>
+                      <p className="text-xs capitalize text-ink/45">{item.kategori}</p>
                     </div>
                     {actions(item.id)}
-                  </div>
-                ))
-              )}
-            </div>
+                  </li>
+                ))}
+              </ol>
+            )}
           </div>
+
+          {/* Upload */}
+          <section className="order-1 h-fit lg:order-2 lg:sticky lg:top-24">
+            <h2 className="mb-3 text-[15px] font-semibold">Tambah lagu</h2>
+            <div className="card p-4">
+              <label
+                htmlFor="upload"
+                className="flex cursor-pointer items-center gap-3 rounded-md border border-dashed border-ink/20 bg-ivory px-4 py-4 transition-colors hover:border-ink"
+              >
+                <UploadIcon className="h-5 w-5 shrink-0 text-ink/50" />
+                <span className="min-w-0 text-sm">
+                  <span className="block truncate font-medium underline decoration-gold decoration-2 underline-offset-4">{fileName || 'Pilih file .mp3'}</span>
+                </span>
+                <input type="file" accept=".mp3" id="upload" className='sr-only' onChange={handleFiles} />
+              </label>
+
+              {audioSrc && (
+                <audio controls className='mt-3 w-full' ref={audioRef} src={audioSrc}>
+                  Your browser does not support the audio element.
+                </audio>
+              )}
+
+              <button className='btn-primary mt-3 w-full' disabled={uploading} onClick={onSubmit}>
+                {uploading && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />}
+                {uploading ? 'Mengupload...' : 'Upload'}
+              </button>
+            </div>
+          </section>
         </div>
       </AppShell>
-      <ToastContainer position="top-center"></ToastContainer>
+      <ToastContainer position="top-center" hideProgressBar></ToastContainer>
     </>
   )
 }

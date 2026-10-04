@@ -4,7 +4,6 @@ import Toggle from "./Toggle";
 export default function SectionCard({
   title,
   description,
-  icon,
   toggle,
   className = "",
   children,
@@ -18,24 +17,17 @@ export default function SectionCard({
 }) {
   const open = !toggle || toggle.checked;
   return (
-    <section className={`card p-5 sm:p-6 ${className}`}>
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3">
-          {icon && (
-            <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold-50 text-lg text-gold-500">
-              {icon}
-            </span>
-          )}
-          <div>
-            <h2 className="font-semibold text-dark">{title}</h2>
-            {description && <p className="mt-0.5 text-xs text-dark/55">{description}</p>}
-          </div>
+    <section className={`card ${className}`}>
+      <div className={`flex items-start justify-between gap-4 px-5 py-4 sm:px-6 ${open && children ? "border-b border-line" : ""}`}>
+        <div>
+          <h2 className="text-[15px] font-semibold text-ink">{title}</h2>
+          {description && <p className="mt-0.5 text-xs text-ink/50">{description}</p>}
         </div>
         {toggle && (
           <Toggle id={toggle.id} checked={toggle.checked} onChange={toggle.onChange} label={toggle.label} />
         )}
       </div>
-      {open && children && <div className="mt-5 flex flex-col gap-5">{children}</div>}
+      {open && children && <div className="flex flex-col gap-5 px-5 py-5 sm:px-6">{children}</div>}
     </section>
   );
 }

@@ -69,14 +69,14 @@ export default function Page({ params }: { params: { id: string } }) {
       <AppShell>
         <Stepper current={1} />
         <PageHeader
-          eyebrow="Edit Undangan · Langkah 2 dari 3 · Engagement"
-          title="Pilih Template"
-          description="Ganti atau pertahankan desain undangan klien."
+          eyebrow="Edit undangan · Engagement"
+          title="Pilih template"
+          description="Template yang sedang dipakai sudah ditandai."
         />
         <TemplatePicker templates={templateList} selected={template} onSelect={setTemplate} loading={loading} />
-        <FormActions onSubmit={onSubmit} submitLabel="Lanjut isi detail" />
+        <FormActions onSubmit={onSubmit} submitLabel="Lanjut" />
       </AppShell>
-      <ToastContainer position="top-center"></ToastContainer>
+      <ToastContainer position="top-center" hideProgressBar></ToastContainer>
     </>
   );
 }

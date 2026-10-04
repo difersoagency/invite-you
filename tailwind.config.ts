@@ -25,6 +25,8 @@ module.exports = {
           700: "#7A5B33",
         },
         dark: "#1F1717",
+        ink: { DEFAULT: "#121010", 800: "#1C1919", 700: "#2A2626", 600: "#3A3535" },
+        line: "#E7E1D8",
         cream: "#FCF5ED",
         ivory: "#FBF8F3",
         gray: { ...defaultColors.gray, DEFAULT: "#a2aab0" },
@@ -34,7 +36,7 @@ module.exports = {
         display: ["'Playfair Display'", "Georgia", "serif"],
       },
       boxShadow: {
-        soft: "0 1px 2px rgba(31,23,23,0.04), 0 8px 24px -12px rgba(31,23,23,0.12)",
+        soft: "0 1px 0 rgba(18,16,16,0.04)",
       },
     },
   },
@@ -44,8 +46,8 @@ module.exports = {
       themes: {
         light: {
           colors: {
-            primary: { DEFAULT: "#CEAA72", foreground: "#1F1717" },
-            focus: "#CEAA72",
+            primary: { DEFAULT: "#121010", foreground: "#FFFFFF" },
+            focus: "#121010",
           },
         },
       },

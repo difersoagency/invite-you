@@ -17,8 +17,8 @@ export default function FieldDetail(props:any) {
 
   return (
     <div className={props.className}>
-      <label htmlFor={props.usefor} className='mb-1.5 block text-sm font-medium text-dark'>{props.label}</label>
-      {props.desc && <p className='mb-2 text-xs text-dark/55'>{props.desc}</p>}
+      <label htmlFor={props.usefor} className='label'>{props.label}</label>
+      {props.desc && <p className='hint mb-2'>{props.desc}</p>}
       <input type={props.type} name={props.usefor} id={props.usefor} placeholder={props.placeholder} className='input-base' value={value || ''} onChange={handleChange} />
     </div>
   )
