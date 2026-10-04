@@ -275,7 +275,7 @@ export default function Page() {
         <FormActions
           onSubmit={onSubmit}
           loading={uploading}
-          submitLabel="Publish Undangan"
+          submitLabel="Publish undangan"
         />
       </AppShell>
       <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>

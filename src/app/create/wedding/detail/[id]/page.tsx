@@ -476,7 +476,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <FormActions
           onSubmit={onSubmit}
           loading={uploading}
-          submitLabel="Simpan Perubahan"
+          submitLabel="Simpan perubahan"
         />
       </AppShell>
       <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>

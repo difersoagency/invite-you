@@ -1,6 +1,5 @@
 "use client";
 
-import HeadDashboard from "@/app/dashboard/HeadDashboard";
 import React, { useCallback, useEffect, useState } from "react";
 import FieldDetail from "@/app/component/FieldDetail";
 import { songs } from "@/app/data/data";
@@ -391,7 +390,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <FormActions
           onSubmit={onSubmit}
           loading={uploading}
-          submitLabel="Simpan Perubahan"
+          submitLabel="Simpan perubahan"
         />
       </AppShell>
       <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>

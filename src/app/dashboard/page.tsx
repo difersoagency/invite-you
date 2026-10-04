@@ -195,11 +195,14 @@ export default  function Dashboard() {
         />
         </motion.div>
 
-        <motion.dl variants={fadeUp} className="mb-10 grid grid-cols-2 gap-y-6 sm:grid-cols-4">
+        <motion.dl variants={fadeUp} className="card mb-8 grid grid-cols-2 sm:grid-cols-4">
           {stats.map(({ label, value }, i) => (
-            <div key={label} className={i === 0 ? '' : i % 2 ? 'border-l border-line pl-5' : 'sm:border-l sm:border-line sm:pl-5'}>
+            <div
+              key={label}
+              className={`px-4 py-4 sm:px-5 sm:py-5 ${i % 2 ? 'border-l border-line' : ''} ${i > 1 ? 'border-t border-line sm:border-t-0' : ''} ${i === 2 ? 'sm:border-l' : ''}`}
+            >
               <dt className="text-xs text-ink/50">{label}</dt>
-              <dd className="mt-1 font-display text-4xl font-semibold tabular-nums">{loading ? '–' : value}</dd>
+              <dd className="mt-1.5 font-display text-3xl font-semibold tabular-nums sm:text-4xl">{loading ? '–' : value}</dd>
             </div>
           ))}
         </motion.dl>
