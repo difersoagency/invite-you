@@ -46,6 +46,8 @@ module.exports = {
       themes: {
         light: {
           colors: {
+            background: "#FBF8F3",
+            foreground: "#121010",
             primary: { DEFAULT: "#121010", foreground: "#FFFFFF" },
             focus: "#121010",
           },
