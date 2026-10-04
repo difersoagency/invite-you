@@ -70,17 +70,17 @@ export default function Create({params}:{ params: {id:string}}) {
 
   return (
     <>
-    <AppShell>
+    <AppShell narrow>
       <Stepper current={0} />
       <PageHeader eyebrow="Edit undangan" title="Data klien" description="Semua kolom wajib diisi." />
 
-      <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="grid gap-6 lg:grid-cols-2">
-        <SectionCard title="Informasi Klien" icon={<UserIcon />}>
-          <FieldCreate type="text" usefor='namaKlien' value={namaKlien} onChange={setNamaklien} label='Nama Klien' placeholder='Nama lengkap klien'/>
-          <FieldCreate type="email" usefor='emailKlien' label='Email Klien' value={emailKlien} onChange={setEmailklien} placeholder='klien@email.com'/>
+      <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="flex flex-col gap-6">
+        <SectionCard title="Informasi klien" icon={<UserIcon />}>
+          <FieldCreate type="text" usefor='namaKlien' value={namaKlien} onChange={setNamaklien} label='Nama klien' placeholder='Nama lengkap klien'/>
+          <FieldCreate type="email" usefor='emailKlien' label='Email klien' value={emailKlien} onChange={setEmailklien} placeholder='klien@email.com'/>
         </SectionCard>
 
-        <SectionCard title="Jenis Acara" description="Tidak bisa diubah saat edit" icon={<CalendarIcon />}>
+        <SectionCard title="Jenis acara" description="Tidak bisa diubah saat edit" icon={<CalendarIcon />}>
           {acara ? (
             <EventTypePicker value={acara} onChange={setAcara} only={acara} />
           ) : (
@@ -92,7 +92,7 @@ export default function Create({params}:{ params: {id:string}}) {
 
       <FormActions onSubmit={onSubmit} submitLabel="Lanjut" />
     </AppShell>
-     <ToastContainer position="top-center" hideProgressBar></ToastContainer>
+     <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>
      </>
   )
 }

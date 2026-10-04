@@ -237,7 +237,7 @@ export default  function Dashboard() {
               <tr className="border-b border-line text-xs text-ink/45">
                 <th className="px-5 py-3 font-medium">Klien</th>
                 <th className="px-5 py-3 font-medium">Acara</th>
-                <th className="px-5 py-3 font-medium">Template</th>
+                <th className="hidden px-5 py-3 font-medium lg:table-cell">Template</th>
                 <th className="px-5 py-3 font-medium">Status</th>
                 <th className="px-5 py-3"><span className="sr-only">Aksi</span></th>
               </tr>
@@ -249,8 +249,8 @@ export default  function Dashboard() {
                     <p className="font-medium capitalize">{item.name}</p>
                     <p className="text-xs text-ink/45">{item.email}</p>
                   </td>
-                  <td className="px-5 py-3.5 capitalize">{item.acara}</td>
-                  <td className="px-5 py-3.5 text-ink/60">{item.template}</td>
+                  <td className="px-5 py-3.5"><span className="capitalize">{item.acara}</span><span className="block text-xs text-ink/45 lg:hidden">{item.template}</span></td>
+                  <td className="hidden px-5 py-3.5 text-ink/60 lg:table-cell">{item.template}</td>
                   <td className="px-5 py-3.5">{status(item.status)}</td>
                   <td className="px-3 py-3.5">{actions(item, item.id)}</td>
                 </tr>
@@ -281,7 +281,7 @@ export default  function Dashboard() {
         </motion.div>
         </motion.div>
       </AppShell>
-      <ToastContainer position="top-center" hideProgressBar></ToastContainer>
+      <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>
     </>
   )
 }

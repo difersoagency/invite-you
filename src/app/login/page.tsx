@@ -107,7 +107,7 @@ export default function Login(){
       </section>
     </main>
     {leaving && <LoginTransition mode="cover" onDone={() => router.replace('/dashboard')} />}
-    <ToastContainer position="top-center"></ToastContainer>
+    <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>
     </>
   );
 

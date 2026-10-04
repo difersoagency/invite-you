@@ -226,7 +226,7 @@ export default  function Music() {
           </section>
         </div>
       </AppShell>
-      <ToastContainer position="top-center" hideProgressBar></ToastContainer>
+      <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>
     </>
   )
 }

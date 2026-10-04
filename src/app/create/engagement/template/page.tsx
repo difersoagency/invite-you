@@ -68,9 +68,9 @@ export default function Page() {
           description="Klik salah satu desain untuk dipilih."
         />
         <TemplatePicker templates={templateList} selected={template} onSelect={setTemplate} loading={loading} />
-        <FormActions onSubmit={onSubmit} submitLabel="Lanjut" />
+        <FormActions onSubmit={onSubmit} submitLabel="Lanjut" wide />
       </AppShell>
-      <ToastContainer position="top-center" hideProgressBar></ToastContainer>
+      <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>
     </>
   );
 }

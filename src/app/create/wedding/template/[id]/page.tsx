@@ -74,9 +74,9 @@ export default function Page({ params }: { params: { id: string } }) {
           description="Template yang sedang dipakai sudah ditandai."
         />
         <TemplatePicker templates={templateList} selected={template} onSelect={setTemplate} loading={loading} />
-        <FormActions onSubmit={onSubmit} submitLabel="Lanjut" />
+        <FormActions onSubmit={onSubmit} submitLabel="Lanjut" wide />
       </AppShell>
-      <ToastContainer position="top-center" hideProgressBar></ToastContainer>
+      <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>
     </>
   );
 }

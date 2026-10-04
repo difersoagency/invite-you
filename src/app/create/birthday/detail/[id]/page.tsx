@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import FieldDetail from "@/app/component/FieldDetail";
-import { Select, SelectItem } from "@nextui-org/react";
 import { songs } from "@/app/data/data";
 import { storeUndangan } from "../../../../../../services/auth";
 import axios from "axios";
@@ -185,7 +184,7 @@ export default function Page({params} : {params : {id:string}}) {
   };
   return (
     <>
-      <AppShell>
+      <AppShell narrow>
         <Stepper current={2} />
         <PageHeader
           eyebrow="Edit undangan · Birthday"
@@ -193,18 +192,18 @@ export default function Page({params} : {params : {id:string}}) {
           description="Bagian dengan tombol di kanan boleh dilewati."
         />
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <SectionCard title="Yang Berulang Tahun" icon={<CakeIcon />}>
+        <div className="flex flex-col gap-6">
+          <SectionCard title="Yang berulang tahun" icon={<CakeIcon />}>
             <div className="grid gap-5 sm:grid-cols-2">
-              <FieldDetail usefor="nama" label="Nama Panggilan" placeholder="Nama panggilan" type="text" value={nama} onChange={setNama} />
-              <FieldDetail usefor="nama-lengkap" label="Nama Lengkap" placeholder="Nama lengkap" type="text" value={namaLengkap} onChange={setNamalengkap} />
+              <FieldDetail usefor="nama" label="Nama panggilan" placeholder="Nama panggilan" type="text" value={nama} onChange={setNama} />
+              <FieldDetail usefor="nama-lengkap" label="Nama lengkap" placeholder="Nama lengkap" type="text" value={namaLengkap} onChange={setNamalengkap} />
             </div>
-            <FieldDetail usefor="tgl-lahir" label="Tanggal Lahir" type="date" value={tglLahir} onChange={setTglLahir} />
-            <div className="rounded-md border border-line p-4">
+            <FieldDetail usefor="tgl-lahir" label="Tanggal lahir" type="date" value={tglLahir} onChange={setTglLahir} />
+            <div className="border-t border-line pt-5">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-medium">Foto</p>
-                  <p className="hint">Opsional, tampilkan foto yang berulang tahun.</p>
+                  <p className="hint">Opsional</p>
                 </div>
                 <Toggle
                   id="fotop"
@@ -231,41 +230,35 @@ export default function Page({params} : {params : {id:string}}) {
             </div>
           </SectionCard>
 
-          <SectionCard title="Data Acara" icon={<CalendarIcon />}>
-            <FieldDetail usefor="alamat" label="Lokasi Acara" placeholder="Alamat lengkap lokasi" type="text" value={alamat} onChange={setAlamat} />
+          <SectionCard title="Data acara" icon={<CalendarIcon />}>
+            <FieldDetail usefor="alamat" label="Lokasi acara" placeholder="Alamat lengkap lokasi" type="text" value={alamat} onChange={setAlamat} />
             <FieldDetail usefor="maps" label="Link Google Maps" placeholder="https://goo.gl/maps/xxxxxxxxxxx" type="url" value={maps} onChange={setMaps} />
-            <div className="grid gap-5 sm:grid-cols-2">
-              <FieldDetail usefor="tgl" label="Tanggal Acara" type="date" value={tgl} onChange={setTgl} />
-              <FieldDetail usefor="waktu" label="Waktu Acara" type="time" value={waktu} onChange={setWaktu} />
+            <div className="grid grid-cols-2 gap-3 sm:gap-5">
+              <FieldDetail usefor="tgl" label="Tanggal acara" type="date" value={tgl} onChange={setTgl} />
+              <FieldDetail usefor="waktu" label="Waktu acara" type="time" value={waktu} onChange={setWaktu} />
             </div>
-            <FieldDetail usefor="ket-acara" label="Keterangan Acara" placeholder="Contoh: Dresscode serba putih" type="text" value={ketAcara} onChange={setKetAcara} />
+            <FieldDetail usefor="ket-acara" label="Keterangan acara" placeholder="Contoh: Dresscode serba putih" type="text" value={ketAcara} onChange={setKetAcara} />
           </SectionCard>
 
-          <SectionCard title="Musik" icon={<MusicIcon />} className="lg:col-span-2">
-            <Select
-              label="Musik"
-              labelPlacement="outside"
-              placeholder="Pilih musik latar"
-              variant="bordered"
-              radius="sm"
-              className="md:max-w-md"
-              selectionMode="single"
-              selectedKeys={defaultMusik}
-              onChange={handleChange}
-            >
-              {musicList.map((music) => (
-                <SelectItem key={music.id} value={music.id}>
-                  {music.judul}
-                </SelectItem>
-              ))}
-            </Select>
+          <SectionCard title="Musik" icon={<MusicIcon />}>
+            <div className="sm:max-w-sm">
+              <label htmlFor="musik" className="label">Musik</label>
+              <select id="musik" className="select-base" value={musik ?? ""} onChange={handleChange}>
+                <option value="" disabled>Pilih musik latar</option>
+                {(musicList || []).map((music) => (
+                  <option key={music.id} value={music.id}>
+                    {music.judul}
+                  </option>
+                ))}
+              </select>
+            </div>
           </SectionCard>
 
           <SectionCard
-            title="Galeri Foto"
+            title="Galeri foto"
             description="Opsional"
             icon={<ImageIcon />}
-            className="lg:col-span-2"
+           
             toggle={{
               id: "galeri",
               checked: isCheckedGallery,
@@ -293,7 +286,7 @@ export default function Page({params} : {params : {id:string}}) {
             title="RSVP via WhatsApp"
             description="Opsional, tamu konfirmasi lewat WhatsApp"
             icon={<ChatIcon />}
-            className="lg:col-span-2"
+           
             toggle={{
               id: "reservasi",
               checked: isCheckedReservasi,
@@ -306,8 +299,8 @@ export default function Page({params} : {params : {id:string}}) {
             }}
           >
             <div className="grid gap-5 sm:grid-cols-2">
-              <FieldDetail usefor="no-wa" label="No. WhatsApp" desc="Gunakan format 62, tanpa 0 di depan." placeholder="Contoh: 628123123123" type="tel" value={noWa} onChange={setNoWa} />
-              <FieldDetail usefor="ket-reservasi" label="Teks Balasan" desc="Pesan otomatis yang dikirim tamu." placeholder="Ya, saya bersedia hadir" type="text" value={ketReservasi} onChange={setKetReservasi} />
+              <FieldDetail usefor="no-wa" label="Nomor WhatsApp" desc="Gunakan format 62, tanpa 0 di depan." placeholder="Contoh: 628123123123" type="tel" value={noWa} onChange={setNoWa} />
+              <FieldDetail usefor="ket-reservasi" label="Teks balasan" desc="Pesan otomatis yang dikirim tamu." placeholder="Ya, saya bersedia hadir" type="text" value={ketReservasi} onChange={setKetReservasi} />
             </div>
           </SectionCard>
         </div>
@@ -318,7 +311,7 @@ export default function Page({params} : {params : {id:string}}) {
           submitLabel="Simpan Perubahan"
         />
       </AppShell>
-      <ToastContainer position="top-center" hideProgressBar></ToastContainer>
+      <ToastContainer position="top-center" hideProgressBar theme="dark"></ToastContainer>
     </>
   );
 }

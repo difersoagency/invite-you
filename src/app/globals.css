@@ -23,6 +23,12 @@
       placeholder:text-ink/35 transition-colors
       hover:border-ink/30 focus:border-ink focus:outline-none focus:ring-0;
   }
+  .select-base {
+    @apply input-base cursor-pointer appearance-none bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23121010' stroke-opacity='.5' stroke-width='1.5'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+  }
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold
       transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2
@@ -49,6 +55,14 @@
   .hint {
     @apply text-xs text-ink/50;
   }
+}
+
+/* Toast disamakan dengan gaya aplikasi */
+.Toastify__toast {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  min-height: 52px;
 }
 
 @layer utilities {

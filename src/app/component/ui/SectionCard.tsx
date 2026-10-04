@@ -18,8 +18,8 @@ export default function SectionCard({
   const open = !toggle || toggle.checked;
   return (
     <section className={`card ${className}`}>
-      <div className={`flex items-start justify-between gap-4 px-5 py-4 sm:px-6 ${open && children ? "border-b border-line" : ""}`}>
-        <div>
+      <div className={`flex items-center justify-between gap-4 px-4 py-4 sm:px-6 ${open && children ? "border-b border-line" : ""}`}>
+        <div className="min-w-0">
           <h2 className="text-[15px] font-semibold text-ink">{title}</h2>
           {description && <p className="mt-0.5 text-xs text-ink/50">{description}</p>}
         </div>
@@ -27,7 +27,7 @@ export default function SectionCard({
           <Toggle id={toggle.id} checked={toggle.checked} onChange={toggle.onChange} label={toggle.label} />
         )}
       </div>
-      {open && children && <div className="flex flex-col gap-5 px-5 py-5 sm:px-6">{children}</div>}
+      {open && children && <div className="flex flex-col gap-5 px-4 py-5 sm:px-6 sm:py-6">{children}</div>}
     </section>
   );
 }
