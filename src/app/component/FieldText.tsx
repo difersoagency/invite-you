@@ -12,14 +12,14 @@ export default function FieldText(props:any) {
     }
   }
 
-
-
   return (
-    <div className='mt-4'>
-      <label htmlFor={props.usefor} className=' text-left text-xs'>{props.label}</label>
-      <br />
-      <input type={props.type} name={props.usefor} id={props.usefor}  className='border border-gold px-3 py-2 text-xs w-[20vw] ' placeholder={props.usefor}  value={props.value || value} // controlled component value
-        onChange={handleChange} />
+    <div>
+      <label htmlFor={props.usefor} className='mb-1.5 block text-sm font-medium text-dark'>{props.label}</label>
+      <div className='relative'>
+        <input type={props.type} name={props.usefor} id={props.usefor} className={`input-base py-3 ${props.trailing ? 'pr-12' : ''}`} placeholder={props.placeholder} autoComplete={props.autoComplete} value={props.value || value}
+          onChange={handleChange} />
+        {props.trailing && <div className='absolute inset-y-0 right-0 flex items-center pr-2'>{props.trailing}</div>}
+      </div>
     </div>
   )
 }

@@ -1,84 +1,68 @@
 "use client"
 
 import React, { useCallback, useEffect, useRef, useState, } from 'react'
-import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, getKeyValue, ChipProps, Tooltip, User, Chip, Button, } from '@nextui-org/react'
-import HeadDashboard from '../dashboard/headDashboard'
-import {EyeIcon} from './../component/icon/EyeIcon'
+import { Table, TableHeader, TableColumn, TableRow, TableCell, TableBody, Tooltip, Button, Spinner, } from '@nextui-org/react'
 import {DeleteIcon} from './../component/icon/DeleteIcon'
-import {EditIcon} from './../component/icon/EditIcon'
-import {songs, song} from './../data/data'
-import { NextApiRequest } from 'next'
-import { useRouter } from 'next/navigation'
-import Cookies from 'js-cookie'
+import { MusicIcon, PlayIcon, UploadIcon } from '../component/icon/Icons'
+import {songs} from './../data/data'
 import axios from 'axios'
-import { deleteMusic, deleteProject, getDetailMusic, getMusicList, getProjectList, storeMusic } from '../../../services/manage'
-import Link from 'next/link'
+import { deleteMusic, getMusicList } from '../../../services/manage'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+import AppShell from '../component/ui/AppShell'
+import PageHeader from '../component/ui/PageHeader'
 
-
-
-type User = typeof users[0];
-
-
-export default  function Dashboard() {
+export default  function Music() {
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [isPlayModalOpen, setPlayModalOpen] = useState(false);
-  const [musicList, setMusiclist] = useState([]);
+  const [musicList, setMusiclist] = useState<any[]>([]);
   const [idHapus, setIdHapus] = useState('');
   const [streamFile, setStreamFile] = useState('');
   const [audioSrc, setAudioSrc] = useState('');
-  const [audioFile, setAudioFile] = useState('');
-  const audioRef = useRef(null);
+  const [audioFile, setAudioFile] = useState<any>('');
+  const [fileName, setFileName] = useState('');
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   const getMusicListAPI = useCallback( async () =>{
-  const data = await getMusicList()
-  setMusiclist(data.data)
+    const data = await getMusicList()
+    setMusiclist(data.data || [])
+    setLoading(false)
 
-  if(data.status > 300 ){
-    toast.error(data.message)
-  }
-
-  },[getMusicList])
-
- 
+    if(data.status > 300 ){
+      toast.error(data.message)
+    }
+  },[])
 
   useEffect(()=>{
     getMusicListAPI()
-    
-  },[])
-
-  // if(!token) {
-  //   router.replace('/login');
-  //   }
+  },[getMusicListAPI])
 
   const ROOT_API = process.env.NEXT_PUBLIC_API;
-  const openPlayModalWithID = (id) => {
-   setPlayModalOpen(true);
-   setStreamFile(`${ROOT_API}/music/detail/${id}`);
-    console.log(id)
+  const openPlayModalWithID = (id: string) => {
+    setPlayModalOpen(true);
+    setStreamFile(`${ROOT_API}/music/detail/${id}`);
   };
 
-
-  const handleFiles = (event) => {
+  const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+    if (!files || !files.length) return;
     setAudioFile(files);
+    setFileName(files[0].name);
     setAudioSrc(URL.createObjectURL(files[0]));
     if(audioRef.current){
       audioRef.current.load();
-      audioRef.current.play();
     }
   };
 
-  const openModalWithID = (id) => {
+  const openModalWithID = (id: string) => {
     setIdHapus(id);
     onOpen();
   };
 
-  const closeModal = () => {
-    setPlayModalOpen(false);
-  };
   const config = {
     headers: {
       'content-type': 'multipart/form-data',
@@ -93,110 +77,93 @@ export default  function Dashboard() {
       return
     }
     try {
-      const formData = new FormData();
-      formData.append('audioFile', audioFile);
       const response = await axios.post(`${ROOT_API}/music/store`, audioFile, config);
       if (response.status >= 200 && response.status < 300) {
-        toast.success("Berhasil di Upload",
-          {   
-            onClose: () => {
-              setTimeout(()=>{
-                window.location.reload();
-              },500)
-          }
-          });
-    } else {
-        toast.error(response.message);
+        toast.success("Berhasil di Upload");
+        setAudioFile('');
+        setAudioSrc('');
+        setFileName('');
+        getMusicListAPI();
+      } else {
+        toast.error((response as any).message);
+      }
+    } catch (error: any) {
+      toast.error(error?.message || 'Gagal upload lagu');
     }
-    } catch (error) {
-      toast.error(error);
-    }
+    setUploading(false);
   }
 
-
   const hapusHandler = async () => {
-    console.log(idHapus);
+    setDeleting(true);
     try {
-      
       const response = await deleteMusic(idHapus);
-      
+
       if (response.status >= 200 && response.status < 300) {
           onClose();
-          toast.success("Berhasil di Hapus",
-            {   
-              onClose: () => {
-                setTimeout(()=>{
-                  window.location.reload();
-                },500)
-            }
-            });
+          toast.success("Berhasil di Hapus");
+          getMusicListAPI();
       } else {
           toast.error(response.message);
       }
-  } catch (error) {
+    } catch (error) {
       console.error('Error:', error);
-      toast.error('Gagal di Publish');
+      toast.error('Gagal di Hapus');
+    }
+    setDeleting(false);
   }
-  }
-    
 
-  const renderCell = React.useCallback((user: User, columnKey: React.Key,  id: string) => {
-    const cellValue = user[columnKey as keyof User];
-  
+  const actions = (id: string) => (
+    <div className="flex items-center gap-1">
+      <Tooltip content="Putar">
+        <button type="button" aria-label="Putar lagu" className="flex h-9 w-9 items-center justify-center rounded-lg text-base text-gold-600 hover:bg-gold-50" onClick={()=> openPlayModalWithID(id)}>
+          <PlayIcon />
+        </button>
+      </Tooltip>
+      <Tooltip color="danger" content="Hapus Lagu">
+        <button type="button" aria-label="Hapus lagu" className="flex h-9 w-9 items-center justify-center rounded-lg text-lg text-danger hover:bg-red-50" onClick={() => openModalWithID(id)}>
+          <DeleteIcon />
+        </button>
+      </Tooltip>
+    </div>
+  );
+
+  const renderCell = (song: any, columnKey: React.Key, id: string) => {
+    const cellValue = song[columnKey as string];
+
     switch (columnKey) {
       case "judul":
         return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-            <p className="text-bold text-xs text-gold capitalize">{user.email}</p>
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold-50 text-gold-500">
+              <MusicIcon />
+            </span>
+            <p className="text-sm font-medium">{cellValue}</p>
           </div>
         );
       case "kategori":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-            <p className="text-bold text-xs text-gold capitalize">{user.template}</p>
-          </div>
-        );
+        return <p className="text-sm capitalize text-dark/70">{cellValue}</p>;
       case "menu":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip content="Play">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={()=> openPlayModalWithID(id)}>
-                <EyeIcon />
-              </span>
-            </Tooltip>
-           
-            <Tooltip color="danger" content="Delete Song">
-            <span className="text-lg text-danger cursor-pointer active:opacity-50"   onClick={() => openModalWithID(id)} >
-            <DeleteIcon />
-            </span>
-            </Tooltip>
-          </div>
-        );
+        return actions(id);
       default:
         return cellValue;
     }
-  }, []);
-
+  };
 
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur'>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur' placement='center'>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Konfirmasi Hapus</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Hapus lagu?</ModalHeader>
               <ModalBody>
-                <p> 
-                  Musik akan dihapus ?
-                </p>
+                <p className='text-sm text-dark/70'>Lagu ini akan dihapus dari daftar musik.</p>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button variant="light" onPress={onClose}>
                   Batal
                 </Button>
-                <Button color="primary" onPress={hapusHandler}>
+                <Button color="danger" isLoading={deleting} onPress={hapusHandler}>
                   Hapus
                 </Button>
               </ModalFooter>
@@ -204,20 +171,20 @@ export default  function Dashboard() {
           )}
         </ModalContent>
       </Modal>
-      <Modal isOpen={isPlayModalOpen} onOpenChange={setPlayModalOpen} backdrop='blur'>
+      <Modal isOpen={isPlayModalOpen} onOpenChange={setPlayModalOpen} backdrop='blur' placement='center'>
         <ModalContent>
           {(closeModal) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Preview Music</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Preview Musik</ModalHeader>
               <ModalBody>
-                    <audio id="audio" controls className='mb-8'>
-                        <source src={streamFile} id="src"  type="audio/mpeg" />
-                        Your browser does not support the audio element.
-                    </audio>
+                <audio id="audio" controls autoPlay className='w-full'>
+                  <source src={streamFile} id="src" type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={closeModal}>
-                  Kembali
+                <Button variant="light" onPress={closeModal}>
+                  Tutup
                 </Button>
               </ModalFooter>
             </>
@@ -225,54 +192,83 @@ export default  function Dashboard() {
         </ModalContent>
       </Modal>
 
-    <section>
-        <HeadDashboard/>
+      <AppShell>
+        <PageHeader eyebrow="Library" title="List Musik" description="Musik latar yang bisa dipilih untuk undangan." />
 
-        
-        <div className='px-10 py-7'>
-            <div className='grid grid-cols-2 items-center mb-10'>
-                <div>
-                    <h1 className='font-bold mb-5'>List Musik</h1>
-                </div>
-                {/* <div className='text-right'>
-                    <button className='text-sm font-bold hover:text-gold rounded-lg text-white  hover:bg-white hover:border hover:border-gold transition-all bg-gold px-4 py-2'>Tambah Lagu</button>
-                </div> */}
-            </div>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* Upload */}
+          <section className="card h-fit p-5 sm:p-6 lg:sticky lg:top-24">
+            <h2 className="font-semibold">Upload Lagu Baru</h2>
+            <p className="mt-0.5 text-xs text-dark/55">Format .mp3</p>
 
-            <div className='px-10 py-5 border border-gold mb-8 rounded-xl'>
-                <h2 className='font-bold mb-8'>Upload Lagu Baru</h2>
-                    <input type="file"  accept=".mp3" id="upload" className='mb-8' onChange={handleFiles} />
-                    {/* <audio id="audio" controls className='mb-8'>
-                        <source src={audioSrc} id="src" type='audio'/>
-                        Your browser does not support the audio element.
-                    </audio> */}
-                    <audio id="audio" controls className='mb-8' ref={audioRef}>
-                {audioSrc && <source src={audioSrc} id="src" type="audio/mpeg" />}
+            <label
+              htmlFor="upload"
+              className="group mt-4 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gold-200 bg-gold-50/40 px-4 py-8 text-center transition hover:border-gold hover:bg-gold-50"
+            >
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-xl text-gold-500 shadow-sm transition group-hover:scale-105">
+                <UploadIcon />
+              </span>
+              <span className="max-w-full truncate text-sm font-medium">{fileName || 'Klik untuk pilih file'}</span>
+              <input type="file" accept=".mp3" id="upload" className='sr-only' onChange={handleFiles} />
+            </label>
+
+            {audioSrc && (
+              <audio controls className='mt-4 w-full' ref={audioRef} src={audioSrc}>
                 Your browser does not support the audio element.
-                 </audio>
-                    <button className='text-sm font-bold hover:text-gold rounded-lg text-white  hover:bg-white hover:border hover:border-gold transition-all bg-gold px-4 py-2'  disabled={uploading} onClick={onSubmit}>
-                    {uploading ? 'Uploading...' : 'Upload Lagu'}</button>
+              </audio>
+            )}
+
+            <button className='btn-primary mt-4 w-full' disabled={uploading} onClick={onSubmit}>
+              {uploading && <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />}
+              {uploading ? 'Uploading...' : 'Upload Lagu'}
+            </button>
+          </section>
+
+          {/* List */}
+          <div className="lg:col-span-2">
+            <div className="hidden sm:block">
+              <Table
+                aria-label="Daftar musik"
+                classNames={{ wrapper: 'card p-2 shadow-soft', th: 'bg-gold-50 text-dark/70 text-xs uppercase tracking-wide' }}
+              >
+                <TableHeader columns={songs}>
+                  {(column: any) => (
+                    <TableColumn key={column.uid} align={column.uid === "menu" ? "center" : "start"}>
+                      {column.name}
+                    </TableColumn>
+                  )}
+                </TableHeader>
+                <TableBody items={musicList} isLoading={loading} loadingContent={<Spinner color="warning" />} emptyContent={loading ? ' ' : 'Belum ada lagu.'}>
+                  {(item: any) => (
+                    <TableRow key={item.id}>
+                      {(columnKey) => <TableCell>{renderCell(item, columnKey,item.id)}</TableCell>}
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             </div>
 
-          <Table aria-label="Example table with custom cells">
-      <TableHeader columns={songs}>
-        {(column) => (
-          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody items={musicList}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey,item.id)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
-      </div>
-    </section>
-     <ToastContainer></ToastContainer>
-     </>
+            <div className="flex flex-col gap-3 sm:hidden">
+              {loading ? (
+                <div className="card flex justify-center p-10"><Spinner color="warning" /></div>
+              ) : musicList.length === 0 ? (
+                <div className="card p-8 text-center text-sm text-dark/55">Belum ada lagu.</div>
+              ) : (
+                musicList.map((item: any) => (
+                  <div key={item.id} className="card flex items-center justify-between gap-3 p-3">
+                    <div className="min-w-0">
+                      {renderCell(item, 'judul', item.id)}
+                      <p className="ml-12 text-xs capitalize text-dark/50">{item.kategori}</p>
+                    </div>
+                    {actions(item.id)}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      </AppShell>
+      <ToastContainer position="top-center"></ToastContainer>
+    </>
   )
 }

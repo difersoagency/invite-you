@@ -1,0 +1,22 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/create/[id]/page": "app/create/[id]/page.js",
+  "/create/engagement/template/[id]/page": "app/create/engagement/template/[id]/page.js",
+  "/create/engagement/detail/[id]/page": "app/create/engagement/detail/[id]/page.js",
+  "/create/engagement/detail/page": "app/create/engagement/detail/page.js",
+  "/create/engagement/template/page": "app/create/engagement/template/page.js",
+  "/create/birthday/detail/page": "app/create/birthday/detail/page.js",
+  "/create/page": "app/create/page.js",
+  "/create/wedding/template/page": "app/create/wedding/template/page.js",
+  "/create/birthday/template/page": "app/create/birthday/template/page.js",
+  "/create/wedding/detail/[id]/page": "app/create/wedding/detail/[id]/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/create/birthday/template/[id]/page": "app/create/birthday/template/[id]/page.js",
+  "/login/page": "app/login/page.js",
+  "/music/page": "app/music/page.js",
+  "/page": "app/page.js",
+  "/create/wedding/template/[id]/page": "app/create/wedding/template/[id]/page.js",
+  "/create/birthday/detail/[id]/page": "app/create/birthday/detail/[id]/page.js",
+  "/create/wedding/detail/page": "app/create/wedding/detail/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
+}

@@ -1,6 +1,5 @@
 "use client";
 
-import HeadDashboard from "@/app/dashboard/headDashboard";
 import React, { useCallback, useEffect, useState } from "react";
 import FieldDetail from "@/app/component/FieldDetail";
 import { Select, SelectItem } from "@nextui-org/react";
@@ -12,6 +11,14 @@ import "react-toastify/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { getMusicList } from "../../../../../services/manage";
 import Cookies from "js-cookie";
+import AppShell from "@/app/component/ui/AppShell";
+import PageHeader from "@/app/component/ui/PageHeader";
+import Stepper from "@/app/component/ui/Stepper";
+import SectionCard from "@/app/component/ui/SectionCard";
+import Toggle from "@/app/component/ui/Toggle";
+import ImageUpload from "@/app/component/ui/ImageUpload";
+import FormActions from "@/app/component/ui/FormActions";
+import { CalendarIcon, EnvelopeIcon, GiftIcon, ImageIcon, UserIcon } from "@/app/component/icon/Icons";
 
 export default function Page() {
   const router = useRouter();
@@ -62,6 +69,9 @@ export default function Page() {
   const [isCheckedSumbangan, setCheckedSumbangan] = useState(false);
   const [galleryView, setGalleryView] = useState([]);
   const [isCheckedGallery, setCheckedGallery] = useState(false);
+  //Maps
+  const [mapsAkad, setmapsAkad] = useState("");
+  const [mapsResepsi, setmapsResepsi] = useState("");
   const config = {
     headers: {
       "content-type": "multipart/form-data",
@@ -102,7 +112,9 @@ export default function Page() {
       (alamatResepsi == "" && isCheckedResepsi) ||
       (tglResepsi == "" && isCheckedResepsi) ||
       (waktuResepsi == "" && isCheckedResepsi) ||
+      (mapsResepsi == "" && isCheckedResepsi) ||
       alamatAkad == "" ||
+      mapsAkad == "" ||
       tglAkad == "" ||
       waktuAkad == "" ||
       (gallery.length === 0 && isCheckedGallery) ||
@@ -143,9 +155,11 @@ export default function Page() {
       isCheckedResepsi && formData.append("alamatResepsi", alamatResepsi);
       isCheckedResepsi && formData.append("tglResepsi", tglResepsi);
       isCheckedResepsi && formData.append("waktuResepsi", waktuResepsi);
+      isCheckedResepsi && formData.append("mapsResepsi", mapsResepsi);
       formData.append("alamatAkad", alamatAkad);
       formData.append("tglAkad", tglAkad);
       formData.append("waktuAkad", waktuAkad);
+      formData.append("mapsAkad", mapsAkad);
       isCheckedSumbangan && formData.append("noRek", noRek);
       isCheckedSumbangan && formData.append("ketRek", ketRek);
 
@@ -183,570 +197,234 @@ export default function Page() {
   };
   return (
     <>
-      <section>
-        <HeadDashboard />
-        <div className="px-10 py-7">
-          {/* Step Navigator */}
-          {/* {stepList()} */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 py-10 items-stretch">
-            <div className="border border-gray px-4 py-7">
-              <label htmlFor="pesan" className="font-bold text-left text-xs">
-                Gambar Pasangan
-              </label>
-              <p className="text-gray text-[0.6rem] mb-2 ">
-                Upload dan Masukkan Gambar Pasangan sebagai Gambar Utama
-              </p>
-              <input
-                type="file"
-                className="utama-pict text-xs"
-                onChange={(event) => {
-                  setGambarutamaView(
-                    URL.createObjectURL(event.target.files[0])
-                  );
-                  return setGambarutama(event.target.files[0]);
+      <AppShell>
+        <Stepper current={2} />
+        <PageHeader
+          eyebrow="Langkah 3 dari 3 · Wedding"
+          title="Detail Acara"
+          description="Lengkapi informasi undangan. Bagian opsional bisa diaktifkan lewat tombol di kanan."
+        />
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SectionCard title="Gambar & Musik" description="Visual utama dan musik latar undangan." icon={<ImageIcon />} className="lg:col-span-2">
+            <div className="grid gap-5 md:grid-cols-2">
+              <ImageUpload
+                id="gambar-utama"
+                label="Gambar Pasangan"
+                description="Gambar utama undangan."
+                previews={[gambarUtamaView]}
+                onFiles={(files) => {
+                  setGambarutamaView(URL.createObjectURL(files[0]));
+                  setGambarutama(files[0]);
                 }}
               />
-              {gambarUtamaView ? (
-                <div className="mt-10 border border-gold border-dotted px-6 py-4 rounded-lg ">
-                  <label
-                    htmlFor="pesan"
-                    className="font-bold text-left text-xs"
-                  >
-                    Image Preview
-                  </label>
-
-                  <div className="w-fit mt-4">
-                    <img
-                      src={gambarUtamaView}
-                      alt=""
-                      width={200}
-                      height={200}
-                    />
-                  </div>
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-            <div className="border border-gray px-4 py-7">
-              <label
-                htmlFor="pengantar"
-                className="font-bold text-left text-xs"
-              >
-                Musik
-              </label>
-              <p className="text-gray text-[0.6rem] mb-2 ">
-                Pilih Musik yang ingin Anda gunakan
-              </p>
-              <Select
-                label="Musik Pilihan"
-                value={musik}
-                onChange={(event) => setMusik(event.target.value)}
-              >
-                {musicList.map((music) => (
-                  <SelectItem key={music.id} value={music.id}>
-                    {music.judul}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
-
-            {/* <div>
-                        <label htmlFor='pesan' className='font-bold text-left text-xs'>Gambar Utama</label>
-                        <p className='text-gray text-[0.6rem] mb-2 '>Upload dan Masukkan Gambar Utama undangan Anda</p>
-                        <input type="file" className='utama-pict text-xs'  
-                        onChange={(event) => {
-                            setGambarutamaView(URL.createObjectURL(event.target.files[0]))
-                                    return setGambarutama(event.target.files[0])    
-                                }} />
-                        {gambarUtamaView ? 
-                        <div className='mt-10 border border-gold border-dotted px-6 py-4 rounded-lg '>
-                            <label htmlFor='pesan' className='font-bold text-left text-xs'>Image Preview</label>
-
-                            <div className='w-fit mt-4'>
-                                <img src={gambarUtamaView} alt=""  width={200} height={200}/>
-                            </div>
-                        </div> : ''
-                        }
-                    </div> */}
-
-            <div className="border border-gray px-4 py-7">
-              <label htmlFor="pesan" className="font-bold text-left text-xs">
-                Gambar Cover
-              </label>
-              <p className="text-gray text-[0.6rem] mb-2 ">
-                Upload dan Masukkan Gambar Cover undangan Anda
-              </p>
-              <input
-                type="file"
-                className="cover-pict text-xs"
-                onChange={(event) => {
-                  setGambarcoverView(
-                    URL.createObjectURL(event.target.files[0])
-                  );
-                  return setGambarcover(event.target.files[0]);
+              <ImageUpload
+                id="gambar-cover"
+                label="Gambar Cover"
+                description="Tampil di halaman pembuka undangan."
+                previews={[gambarCoverView]}
+                onFiles={(files) => {
+                  setGambarcoverView(URL.createObjectURL(files[0]));
+                  setGambarcover(files[0]);
                 }}
               />
-              {gambarCoverView ? (
-                <div className="mt-10 border border-gold border-dotted px-6 py-4 rounded-lg ">
-                  <label
-                    htmlFor="pesan"
-                    className="font-bold text-left text-xs"
-                  >
-                    Image Preview
-                  </label>
-
-                  <div className="w-fit mt-4">
-                    <img
-                      src={gambarCoverView}
-                      alt=""
-                      width={200}
-                      height={200}
-                    />
-                  </div>
-                </div>
-              ) : (
-                ""
-              )}
             </div>
+            <Select
+              label="Musik"
+              labelPlacement="outside"
+              placeholder="Pilih musik latar"
+              variant="bordered"
+              className="md:max-w-md"
+              value={musik}
+              onChange={(event) => setMusik(event.target.value)}
+            >
+              {musicList.map((music) => (
+                <SelectItem key={music.id} value={music.id}>
+                  {music.judul}
+                </SelectItem>
+              ))}
+            </Select>
+          </SectionCard>
 
+          <SectionCard title="Kata Pengantar" description="Sambutan pembuka untuk para tamu." icon={<EnvelopeIcon />} className="lg:col-span-2">
+            <FieldDetail usefor="pasangan" label="Nama Pasangan" desc="Ditampilkan sebagai judul undangan." placeholder="Contoh: David & Yusi" type="text" value={namaPasangan} onChange={setNamapasangan} />
             <div>
-              <label
-                htmlFor="pengantar"
-                className="font-bold text-left text-xs"
-              >
+              <label htmlFor="pengantar" className="mb-1.5 block text-sm font-medium text-dark">
                 Kata Pengantar
               </label>
-              <p className="text-gray text-[0.6rem] mb-2 ">
-                Tuliskan Kata Kata Pengantar Anda
-              </p>
               <textarea
                 name="pengantar"
                 id="pengantar"
-                value={kataPengantar}
+                value={kataPengantar || ""}
                 onChange={(event) => setKatapengantar(event.target.value)}
-                className="border border-gold px-3 py-2 text-xs  w-full md:w-2/3"
-                rows={10}
+                className="input-base min-h-[140px] resize-y"
+                placeholder="Tuliskan kata-kata pengantar..."
+                rows={6}
               ></textarea>
             </div>
+          </SectionCard>
 
-            <div className="col-span-2 border border-gold px-8 py-5">
-              <input
-                type="checkbox"
-                name="galeri"
-                id="galeri"
-                className="peer/galeri"
-                onChange={(event) => {
-                  setGalleryView([]);
-                  setGallery([]);
-                  setCheckedGallery(!isCheckedGallery);
-                }}
-              />
-              <label
-                htmlFor="galeri"
-                className="font-bold text-left text-xs ml-3"
-              >
-                Upload Foto Gallery
-              </label>
-              <br />
-              <br />
-              <input
-                type="file"
-                name=""
-                id=""
-                className="text-xs peer-checked/galeri:block hidden"
-                multiple
-                onChange={(event) => {
-                  const files = Array.from(event.target.files);
-                  setGalleryView(files);
-                  return setGallery(files);
-                }}
-              />
-              {galleryView.length > 0 ? (
-                <div className="mt-10 border border-gold border-dotted px-6 py-4 rounded-lg ">
-                  <label
-                    htmlFor="pesan"
-                    className="font-bold text-left text-xs"
-                  >
-                    Image Preview
-                  </label>
-
-                  <div className="grid grid-cols-6 gap-6">
-                    {galleryView.map((file, index) => (
-                      <img
-                        key={index}
-                        src={URL.createObjectURL(file)}
-                        alt={`Preview ${index}`}
-                        width={200}
-                        height={200}
-                      />
-                    ))}
-                  </div>
+          <SectionCard title="Mempelai Pria" description="Data diri & orang tua mempelai pria." icon={<UserIcon />}>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FieldDetail usefor="pria" label="Nama Panggilan" placeholder="Nama panggilan" type="text" value={namaPria} onChange={setNamapria} />
+              <FieldDetail usefor="pria-lengkap" label="Nama Lengkap" placeholder="Nama lengkap pria" type="text" value={namaLengkapPria} onChange={setNamalengkappria} />
+              <FieldDetail usefor="ayah-pria" label="Nama Ayah" placeholder="Nama ayah" type="text" value={ayahPria} onChange={setAyahpria} />
+              <FieldDetail usefor="ibu-pria" label="Nama Ibu" placeholder="Nama ibu" type="text" value={ibuPria} onChange={setIbupria} />
+            </div>
+            <div className="rounded-xl border border-gold-100 bg-ivory p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium">Foto Pria</p>
+                  <p className="text-xs text-dark/55">Opsional, tampilkan foto mempelai pria.</p>
                 </div>
-              ) : (
-                ""
+                <Toggle
+                  id="fotop"
+                  checked={isCheckedFotoPria}
+                  onChange={() => {
+                    setFotopriaView(null);
+                    setFotopria("");
+                    setCheckedFotoPria(!isCheckedFotoPria);
+                  }}
+                />
+              </div>
+              {isCheckedFotoPria && (
+                <div className="mt-4">
+                  <ImageUpload
+                    id="fotop-file"
+                    previews={[fotoPriaView]}
+                    onFiles={(files) => {
+                      setFotopriaView(URL.createObjectURL(files[0]));
+                      setFotopria(files[0]);
+                    }}
+                  />
+                </div>
               )}
             </div>
+          </SectionCard>
 
-            <div className="py-5">
-              <h2 className="text-dark font-bold mb-5">Data Pria</h2>
-
-              <div className=" px-6 py-7 border border-gold flex flex-col gap-7 w-full md:w-4/5">
-                <FieldDetail
-                  usefor="pria"
-                  label="Nama Panggilan Pria"
-                  desc=""
-                  placeholder="Nama Panggilan"
-                  type="text"
-                  value={namaPria}
-                  onChange={setNamapria}
-                />
-
-                <FieldDetail
-                  usefor="pria-lengkap"
-                  label="Nama Lengkap Pria"
-                  desc=""
-                  placeholder="Nama Lengkap Pria"
-                  type="text"
-                  value={namaLengkapPria}
-                  onChange={setNamalengkappria}
-                />
-
-                <FieldDetail
-                  usefor="ayah-pria"
-                  label="Nama Ayah (Pria)"
-                  desc=""
-                  placeholder="Nama Ayah Pria"
-                  type="text"
-                  value={ayahPria}
-                  onChange={setAyahpria}
-                />
-
-                <FieldDetail
-                  usefor="ibu-pria"
-                  label="Nama Ibu (Pria)"
-                  desc=""
-                  placeholder="Nama Ibu Pria"
-                  type="text"
-                  value={ibuPria}
-                  onChange={setIbupria}
-                />
-
+          <SectionCard title="Mempelai Wanita" description="Data diri & orang tua mempelai wanita." icon={<UserIcon />}>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FieldDetail usefor="wanita" label="Nama Panggilan" placeholder="Nama panggilan" type="text" value={namaWanita} onChange={setNamawanita} />
+              <FieldDetail usefor="wanita-lengkap" label="Nama Lengkap" placeholder="Nama lengkap wanita" type="text" value={namaLengkapWanita} onChange={setNamalengkapwanita} />
+              <FieldDetail usefor="ayah-wanita" label="Nama Ayah" placeholder="Nama ayah" type="text" value={ayahWanita} onChange={setAyahwanita} />
+              <FieldDetail usefor="ibu-wanita" label="Nama Ibu" placeholder="Nama ibu" type="text" value={ibuWanita} onChange={setIbuwanita} />
+            </div>
+            <div className="rounded-xl border border-gold-100 bg-ivory p-4">
+              <div className="flex items-center justify-between gap-4">
                 <div>
-                  <input
-                    type="checkbox"
-                    name="fotop"
-                    id="fotop"
-                    className="peer/fotop"
-                    onChange={(event) => {
-                      setFotopriaView(null);
-                      setFotopria("");
-                      setCheckedFotoPria(!isCheckedFotoPria);
-                    }}
-                  />
-                  <label
-                    htmlFor="fotop"
-                    className="font-bold text-left text-xs ml-3"
-                  >
-                    Foto Pria
-                  </label>
-                  <p className="text-gray text-[0.6rem] mb-2 ">
-                    Masukkan Foto Pria
-                  </p>
-                  <input
-                    type="file"
-                    className="p-pict text-xs peer-checked/fotop:block hidden"
-                    onChange={(event) => {
-                      setFotopriaView(
-                        URL.createObjectURL(event.target.files[0])
-                      );
-                      return setFotopria(event.target.files[0]);
-                    }}
-                  />
-
-                  {fotoPriaView ? (
-                    <div className="mt-10 border border-gold border-dotted px-6 py-4 rounded-lg ">
-                      <label
-                        htmlFor="pesan"
-                        className="font-bold text-left text-xs"
-                      >
-                        Image Preview
-                      </label>
-
-                      <div className="w-fit mt-4">
-                        <img
-                          src={fotoPriaView}
-                          alt=""
-                          width={200}
-                          height={200}
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    ""
-                  )}
+                  <p className="text-sm font-medium">Foto Wanita</p>
+                  <p className="text-xs text-dark/55">Opsional, tampilkan foto mempelai wanita.</p>
                 </div>
+                <Toggle
+                  id="fotow"
+                  checked={isCheckedFotoWanita}
+                  onChange={() => {
+                    setFotowanitaView(null);
+                    setFotowanita("");
+                    setCheckedFotoWanita(!isCheckedFotoWanita);
+                  }}
+                />
               </div>
-            </div>
-
-            <div className="py-5">
-              <h2 className="text-dark font-bold  mb-5">Data Wanita</h2>
-
-              <div className=" px-6 py-7 border border-gold flex flex-col gap-7 w-full md:w-4/5">
-                <FieldDetail
-                  usefor="wanita"
-                  value={namaWanita}
-                  onChange={setNamawanita}
-                  label="Nama Panggilan Wanita"
-                  desc=""
-                  placeholder="Nama wanita"
-                  type="text"
-                />
-
-                <FieldDetail
-                  usefor="wanita-lengkap"
-                  value={namaLengkapWanita}
-                  onChange={setNamalengkapwanita}
-                  label="Nama Lengkap wanita"
-                  desc=""
-                  placeholder="Nama Lengkap Wanita"
-                  type="text"
-                />
-
-                <FieldDetail
-                  usefor="ayah-wanita"
-                  value={ayahWanita}
-                  onChange={setAyahwanita}
-                  label="Nama Ayah (Wanita)"
-                  desc=""
-                  placeholder="Nama Ayah Wanita"
-                  type="text"
-                />
-
-                <FieldDetail
-                  usefor="ibu-wanita"
-                  value={ibuWanita}
-                  onChange={setIbuwanita}
-                  label="Nama Ibu (Wanita)"
-                  desc=""
-                  placeholder="Nama Ibu Wanita"
-                  type="text"
-                />
-                <div>
-                  <input
-                    type="checkbox"
-                    name="fotow"
-                    id="fotow"
-                    className="peer/fotow"
-                    onChange={(event) => {
-                      setFotowanitaView(null);
-                      setFotowanita("");
-                      setCheckedFotoWanita(!isCheckedFotoWanita);
+              {isCheckedFotoWanita && (
+                <div className="mt-4">
+                  <ImageUpload
+                    id="fotow-file"
+                    previews={[fotoWanitaView]}
+                    onFiles={(files) => {
+                      setFotowanitaView(URL.createObjectURL(files[0]));
+                      setFotowanita(files[0]);
                     }}
                   />
-                  <label
-                    htmlFor="fotow"
-                    className=" font-bold text-left text-xs ml-3"
-                  >
-                    Foto Wanita
-                  </label>
-                  <p className="text-gray text-[0.6rem] mb-2 ">
-                    Masukkan Foto Wanita
-                  </p>
-                  <input
-                    type="file"
-                    className="w-pict text-xs hidden peer-checked/fotow:block"
-                    onChange={(event) => {
-                      setFotowanitaView(
-                        URL.createObjectURL(event.target.files[0])
-                      );
-                      return setFotowanita(event.target.files[0]);
-                    }}
-                  />
-                  {fotoWanitaView ? (
-                    <div className="mt-10 border border-gold border-dotted px-6 py-4 rounded-lg ">
-                      <label
-                        htmlFor="pesan"
-                        className="font-bold text-left text-xs"
-                      >
-                        Image Preview
-                      </label>
-
-                      <div className="w-fit mt-4">
-                        <img
-                          src={fotoWanitaView}
-                          alt=""
-                          width={200}
-                          height={200}
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    ""
-                  )}
                 </div>
-              </div>
+              )}
             </div>
+          </SectionCard>
 
-            <div className="py-5">
-              <h2 className="text-dark font-bold  mb-5">
-                Data Akad / Pemberkatan
-              </h2>
-
-              <div className=" px-6 py-7 border border-gold flex flex-col gap-7 w-full md:w-4/5">
-                <FieldDetail
-                  usefor="alamat"
-                  label="Alamat Akad"
-                  desc=""
-                  placeholder="Alamat Akad"
-                  type="text"
-                  value={alamatAkad}
-                  onChange={setAlamatakad}
-                />
-
-                <FieldDetail
-                  usefor="tanggal"
-                  label="Tanggal Akad"
-                  desc=""
-                  placeholder="Tanggal / Bulan / Tahun"
-                  type="date"
-                  value={tglAkad}
-                  onChange={setTglakad}
-                />
-
-                <FieldDetail
-                  usefor="waktu"
-                  label="Waktu Akad"
-                  desc=""
-                  placeholder="Jam Akad"
-                  type="time"
-                  value={waktuAkad}
-                  onChange={setWaktuakad}
-                />
-              </div>
+          <SectionCard title="Akad / Pemberkatan" description="Waktu dan lokasi akad atau pemberkatan." icon={<CalendarIcon />}>
+            <FieldDetail usefor="alamat-akad" label="Alamat Akad" placeholder="Alamat lengkap lokasi" type="text" value={alamatAkad} onChange={setAlamatakad} />
+            <FieldDetail usefor="maps-akad" label="Link Google Maps Akad" placeholder="https://goo.gl/maps/xxxxxxxxxxx" type="url" value={mapsAkad} onChange={setmapsAkad} />
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FieldDetail usefor="tanggal-akad" label="Tanggal Akad" type="date" value={tglAkad} onChange={setTglakad} />
+              <FieldDetail usefor="waktu-akad" label="Waktu Akad" type="time" value={waktuAkad} onChange={setWaktuakad} />
             </div>
+          </SectionCard>
 
-            <div className="py-5">
-              <h2 className="text-dark font-bold  mb-5">
-                Data Resepsi (Optional)
-              </h2>
-              <input
-                type="checkbox"
-                name="resepsi"
-                id="resepsi"
-                className="peer/active"
-                onChange={(event) => {
-                  setAlamatresepsi("");
-                  setTglresepsi("");
-                  setWakturesepsi("");
-                  setCheckedResepsi(!isCheckedResepsi);
-                }}
-              />
-              <label
-                htmlFor="resepsi"
-                className="text-xs ml-2 peer-checked/active:text-gold "
-              >
-                Dengan Resepsi
-              </label>
-
-              <div className=" px-6 py-7 border border-gold flex-col gap-7 w-full md:w-4/5 hidden peer-checked/active:flex mt-5">
-                <FieldDetail
-                  usefor="alamat"
-                  label="Alamat Resepsi"
-                  desc=""
-                  placeholder="Alamat Resepsi"
-                  type="text"
-                  value={alamatResepsi}
-                  onChange={setAlamatresepsi}
-                />
-
-                <FieldDetail
-                  usefor="tanggal"
-                  label="Tanggal Resepsi"
-                  desc=""
-                  placeholder="Tanggal / Bulan / Tahun"
-                  type="date"
-                  value={tglResepsi}
-                  onChange={setTglresepsi}
-                />
-
-                <FieldDetail
-                  usefor="waktu"
-                  label="Waktu Resepsi"
-                  desc=""
-                  placeholder="Waktu Resepsi"
-                  type="time"
-                  value={waktuResepsi}
-                  onChange={setWakturesepsi}
-                />
-              </div>
+          <SectionCard title="Resepsi" description="Opsional, aktifkan bila ada acara resepsi." icon={<CalendarIcon />} toggle={{
+              id: "resepsi",
+              checked: isCheckedResepsi,
+              label: "Dengan resepsi",
+              onChange: () => {
+                setAlamatresepsi("");
+                setTglresepsi("");
+                setWakturesepsi("");
+                setmapsResepsi("");
+                setCheckedResepsi(!isCheckedResepsi);
+              },
+            }}>
+            <FieldDetail usefor="alamat-resepsi" label="Alamat Resepsi" placeholder="Alamat lengkap lokasi" type="text" value={alamatResepsi} onChange={setAlamatresepsi} />
+            <FieldDetail usefor="maps-resepsi" label="Link Google Maps Resepsi" placeholder="https://goo.gl/maps/xxxxxxxxxxx" type="url" value={mapsResepsi} onChange={setmapsResepsi} />
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FieldDetail usefor="tanggal-resepsi" label="Tanggal Resepsi" type="date" value={tglResepsi} onChange={setTglresepsi} />
+              <FieldDetail usefor="waktu-resepsi" label="Waktu Resepsi" type="time" value={waktuResepsi} onChange={setWakturesepsi} />
             </div>
-            <div>
-              <FieldDetail
-                usefor="pasangan"
-                label="Nama Pasangan"
-                desc="Tuliskan Nama Pasangan"
-                placeholder="Nama Cowok Nama Cewek (David Yusi)"
-                type="text"
-                value={namaPasangan}
-                onChange={setNamapasangan}
-              />
-            </div>
-            <div className="py-5">
-              <h2 className="text-dark font-bold  mb-5">
-                Data Sumbangan (Optional)
-              </h2>
-              <input
-                type="checkbox"
-                name="sumbangan"
-                id="sumbangan"
-                className="peer/active"
-                onChange={(event) => {
-                  setNorek("");
-                  setKetRek("");
-                  setCheckedSumbangan(!isCheckedSumbangan);
-                }}
-              />
-              <label
-                htmlFor="sumbangan"
-                className="text-xs ml-2 peer-checked/active:text-gold "
-              >
-                Menerima Sumbangan
-              </label>
+          </SectionCard>
 
-              <div className=" px-6 py-7 border border-gold flex-col gap-7 w-full md:w-4/5 hidden peer-checked/active:flex mt-5">
-                <FieldDetail
-                  usefor="norekening"
-                  label="No rekening"
-                  desc=""
-                  placeholder="contoh:111222233"
-                  type="text"
-                  value={noRek}
-                  onChange={setNorek}
-                />
-                <FieldDetail
-                  usefor="ket rekening"
-                  label="Keterangan Rekening"
-                  desc=""
-                  placeholder="a/n David BCA"
-                  type="text"
-                  value={ketRek}
-                  onChange={setKetRek}
-                />
-              </div>
-            </div>
-          </div>
-
-          <button
-            className="text-xs bg-gold text-dark px-6 py-2"
-            disabled={uploading}
-            onClick={onSubmit}
+          <SectionCard
+            title="Galeri Foto"
+            description="Opsional, kumpulan foto pasangan."
+            icon={<ImageIcon />}
+            className="lg:col-span-2"
+            toggle={{
+              id: "galeri",
+              checked: isCheckedGallery,
+              label: "Tampilkan galeri",
+              onChange: () => {
+                setGalleryView([]);
+                setGallery([]);
+                setCheckedGallery(!isCheckedGallery);
+              },
+            }}
           >
-            {uploading ? "Tunggu Sebentar.." : "Publish Undangan"}
-          </button>
+            <ImageUpload
+              id="galeri-file"
+              multiple
+              previews={galleryView.length > 0 ? galleryView.map((file) => URL.createObjectURL(file)) : []}
+              onFiles={(files) => {
+                setGalleryView(files);
+                setGallery(files);
+              }}
+            />
+          </SectionCard>
+
+          <SectionCard
+            title="Amplop Digital"
+            description="Opsional, rekening untuk menerima sumbangan."
+            icon={<GiftIcon />} className="lg:col-span-2"
+            toggle={{
+              id: "sumbangan",
+              checked: isCheckedSumbangan,
+              label: "Terima sumbangan",
+              onChange: () => {
+                setNorek("");
+                setKetRek("");
+                setCheckedSumbangan(!isCheckedSumbangan);
+              },
+            }}
+          >
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FieldDetail usefor="norekening" label="No. Rekening" placeholder="Contoh: 111222233" type="text" value={noRek} onChange={setNorek} />
+              <FieldDetail usefor="ket-rekening" label="Keterangan Rekening" placeholder="Contoh: a/n David - BCA" type="text" value={ketRek} onChange={setKetRek} />
+            </div>
+          </SectionCard>
         </div>
-      </section>
-      <ToastContainer></ToastContainer>
+
+        <FormActions
+          onSubmit={onSubmit}
+          loading={uploading}
+          submitLabel="Publish Undangan"
+        />
+      </AppShell>
+      <ToastContainer position="top-center"></ToastContainer>
     </>
   );
 }

@@ -8,7 +8,6 @@ export default function FieldDetail(props:any) {
     setValue(props.value);
   }, [props.value]);
 
-
   const handleChange = (e:any) => {
     setValue(e.target.value);
     if(props.onChange){
@@ -17,10 +16,10 @@ export default function FieldDetail(props:any) {
   }
 
   return (
-    <div className=''>
-      <label htmlFor={props.usefor} className='font-bold text-left text-xs'>{props.label}</label>
-      <p className='text-gray text-[0.6rem] mb-2 '>{props.desc}</p>
-      <input type={props.type} name={props.usefor} id={props.usefor} placeholder={props.placeholder}  className='border border-gold px-4 py-3 text-xs  w-2/3'  value={value}  onChange={handleChange} />
+    <div className={props.className}>
+      <label htmlFor={props.usefor} className='mb-1.5 block text-sm font-medium text-dark'>{props.label}</label>
+      {props.desc && <p className='mb-2 text-xs text-dark/55'>{props.desc}</p>}
+      <input type={props.type} name={props.usefor} id={props.usefor} placeholder={props.placeholder} className='input-base' value={value || ''} onChange={handleChange} />
     </div>
   )
 }

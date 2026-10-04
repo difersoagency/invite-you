@@ -7,10 +7,10 @@ export default async function callApi({ url, method, data }: AxiosRequestConfig)
         data
     }).catch(err => err.response)
 
-    if (response.status > 300) {
+    if (!response || response.status > 300) {
         const res = {
             error: true,
-            message: response.data.message,
+            message: response?.data?.message || 'Tidak dapat terhubung ke server',
             data: null
         }
         return res;
